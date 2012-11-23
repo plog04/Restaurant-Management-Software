@@ -1,0 +1,3 @@
+INDEX VERSION 1.126+C:\Users\Guillaume707\Documents\GitHub\moo.projet.session\CodeSource\.metadata\.plugins\org.eclipse.jdt.core
+2161229198.index
+1583450006.index
