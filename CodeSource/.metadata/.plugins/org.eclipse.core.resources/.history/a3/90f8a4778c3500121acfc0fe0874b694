@@ -1,0 +1,44 @@
+package Systeme;
+import java.util.*;
+public class Statistique {
+	
+	Vector v = new Vector(3, 2); // table avec dimension initial 
+	String axeY;
+	String periode;
+	
+	public Statistique(){
+		
+	}
+	
+	
+	public void afficherTableau (){
+		
+	}
+	/**
+	 *  Cas 1 articleMenu, va chercher la quantité et la date de tout les articleMenus=axeY dans base de donnée
+	 */
+	 
+	public void creerTableUnArticleMenu(String axeX){
+		
+		
+		//Cas 2 tout article, va chercher la quantité et la date de tout les articles menu menu
+		
+		//Cas 3 duree commande, va chercher la duree de toute les durees commande
+		
+		//Cas 4 preparation commande, va chercher le temps de tout les preparations de tout les articles
+	}
+	
+	public void creerTableToutArticleMenu(String axeX){
+		
+	}
+	
+	
+	public void creerTableDureeCommande(String axeX){
+		
+	}
+	
+	public void creerTablePrepCommande(String axeX){
+		
+	}
+	
+}

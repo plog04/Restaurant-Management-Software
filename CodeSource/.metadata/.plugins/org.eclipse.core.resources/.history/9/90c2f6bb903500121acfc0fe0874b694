@@ -6,7 +6,6 @@ public class Statistique {
 	String axeY;
 	String periode;
 	
-	
 	public Statistique(){
 		
 	}
@@ -39,51 +38,27 @@ public class Statistique {
 	}
 	
 	public void creerTableToutArticleMenu(String axeX){
-		COLONNE_JOUR=3;
-		COLONNE_MOIS=4;
-		COLONNE_ANNEE=5;
 		int ligne=0;
 		int qtyArticle;
 		int colonne date;
 		switch (axeX){
-		case "Journalier": colonnedate=COLONNE_JOUR; 
-		v = new String[31][2];
-		v[0][0]="Quantité";
-		v[0][1]="Jour";
-		break;
-		case "Hebdomadaire": colonnedate=COLONNE_JOUR; 
-		v = new String [53][2];
-		v[0][0]="Quantité";
-		v[0][1]="Semaine";
-		break;
-		case "Mensuel": break; colonnedate=COLONNE_MOIS; 
-		v = new String [13][2]; 
-		v[0][0]="Quantité";
-		v[0][1]="Mois";
-		break;
+		case "Journalier": colonnedate=COLONNE_JOUR; break;
+		case "Hebdomadaire": colonnedate=COLONNE_JOUR; break;
+		case "Mensuel": break; colonnedate=COLONNE_MOIS; break;
 		
 		}
-		Ligne=GetlastLine(tableLiens);
-		JourDonnee=GetTableDonnée(tableLiens,COLONNE_JOUR,Ligne);
-		MoisDonnee=GetTableDonnée(tableLiens,COLONNE_MOIS,Ligne);
-		AnneeDonnee=GetTableDonnée(tableLiens,COLONNE_ANNEE,Ligne);
-		String tiret="-";
-		while(GetTableDonnée(tableLiens,colonneArticleMenu,ligne)!=null){
+		while(GetTableDonnée(tableLiens,colonneArticleMenu,Ligne)!=null){
 			
-			while (GetTableDonnée(tableLiens,colonnedate,ligne)==JourDonnee){
-				qtyArticle=qtyArticle+GetTableDonnée(tableLiens,colonneArticleMenu,ligneQty);
-			}
-			v[0][0]=String.valueOf(qtyArticle);
-			v[0][1]=String.valueOf(JourDonnee)+tiret+String.valueOf(MoisDonnee)+tiret+String.valueOf(AnneeDonnee);
-			JourDonnee++;
 			
-			/*		
+			qtyArticle=qtyArticle+GetTableDonnée(tableLiens,colonneArticleMenu,ligneQty)
+			
+					
 			if (GetTableDonnée(tableLiens,colonneArticleMenu,ligne)==GetTableDonnée(tableMenu,colonne0,ligne)){
 					
 					
 			}
-			*/
-			ligne--;
+			
+			ligne++;
 		}
 				
 	}
