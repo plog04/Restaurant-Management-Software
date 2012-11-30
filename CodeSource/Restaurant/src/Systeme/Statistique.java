@@ -21,6 +21,8 @@ public class Statistique {
 	int COLONNE_HEUREDEBUT=2;
 	int COLONNE_HEUREFIN=3;
 	
+	Archive archDonnee;
+	
 	public Statistique(){
 		calendar = Calendar.getInstance();
 		dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
@@ -28,10 +30,23 @@ public class Statistique {
 		monthOfYear = calendar.get(Calendar.MONTH);
 		dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 		year=calendar.get(Calendar.YEAR);
+		
+		archDonnee= new Archive();
 	}
 	
 	
-	public void afficherTableau (){
+	
+	
+	
+	
+	public void afficherTableau (String[][] monTableau){
+		for (int i=0;i<monTableau.length;i++){
+			
+			for (int j=0;j<2;j++){
+				System.out.print(" | "+ monTableau[i][j]);
+			}
+			System.out.println();
+		}
 		
 	}
 
@@ -54,7 +69,7 @@ public class Statistique {
 	 *  
 	 */
 	 
-	public void creerTableUnArticleMenu(String articleMenu, String periode){
+	/*public void creerTableUnArticleMenu(String articleMenu, String periode){
 		
 		int maligne=0;
 		int qtyArticle=0;
@@ -155,42 +170,50 @@ public class Statistique {
 		
 		
 	}
-	
+	*/
 	/**
 	 *  Cas 2 Cherche la quantité par periode choisie de tout les articleMenus dans base de donnée
 	 */
 	
-	public void creerTableToutArticleMenu(String periode){
+	public void creerTableToutArticleMenu(String periode)throws ClassNotFoundException{
 	
 		int maligne=0;
 		int qtyArticle=0;
 		int colonneDate=0;
+		calendar = Calendar.getInstance();
+		String dateDebut=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+"-"+String.valueOf(calendar.get(Calendar.YEAR));
+		String dateFin=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+"-"+String.valueOf(calendar.get(Calendar.YEAR));;
 		
 		switch (periode){
 		case "Journalier":  
 			v = new String[31][2];
-			v[0][0]="Quantité";
-			v[0][1]="Jour";
+			
 			// Creons la table journalier
-			int m = 1;
-			maligne=Archive.longueurTable(tableNom)-1;
+			int m = 0;
+			
 			while(m<v.length){
+						
+				dateDebut=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+"-"+String.valueOf(calendar.get(Calendar.YEAR));
+				dateFin=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+"-"+String.valueOf(calendar.get(Calendar.YEAR));
 				
-				if (Archive.getTableDonnee(tableNom,COLONNE_JOUR,maligne)==calendar.get(Calendar.DATE) && Archive.getTableDonnee(tableNom,COLONNE_MOIS,maligne)==calendar.get(Calendar.MONTH)+1 && Archive.getTableDonnee(tableNom,COLONNE_ANNEE,maligne)==calendar.get(Calendar.YEAR)){
-					qtyArticle=qtyArticle+Archive.getTableDonnee(tableNom,COLONNE_QTY,maligne);
+				
+				qtyArticle=archDonnee.ElementPeriod(dateDebut,dateFin);
+				
+				
+				v[m][0]=String.valueOf(qtyArticle);
+				v[m][1]=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+"-"+String.valueOf(calendar.get(Calendar.YEAR));
+				calendar.add(Calendar.DAY_OF_YEAR, -1);
+				m++;
+				qtyArticle=0;
 					
-				}
-				else{
-					v[m][0]=String.valueOf(qtyArticle);
-					v[m][1]=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+String.valueOf(calendar.get(Calendar.YEAR));
-					calendar.add(Calendar.DAY_OF_YEAR, -1);
-					m++;
-					qtyArticle=0;
-					}
-				maligne--;
-			}		
-		
+			}	
+			afficherTableau(v);
 			break;
+			//return(v);
+		default : 
+			v = new String[1][1]; break; 
+			//return(v);
+	/*	
 		case "Hebdomadaire": 
 			 
 			v = new String [53][2];
@@ -254,7 +277,7 @@ public class Statistique {
 		}		
 		
 		break;
-		
+		*/
 		}
 		
 		
@@ -267,7 +290,7 @@ public class Statistique {
 	/**
 	 *  Cas 3 Chercher la durée des commandes en fonction d'une periode.
 	 */
-	
+	/*
 	public void creerTableDureeCommande(String periode){
 		int maligne=0;
 		int dureeMoyenneCommande=0;
@@ -373,7 +396,7 @@ public class Statistique {
 		
 	}
 	
-	
+*/	
 
 	/**
 	 * Cas 4 preparation commande, va chercher le temps de tout les preparations de tout les articles
