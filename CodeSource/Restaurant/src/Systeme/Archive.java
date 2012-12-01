@@ -6,7 +6,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class Archive {
@@ -31,8 +35,7 @@ public class Archive {
 	}
 	
 	public void openConnection() {
-		// load the sqlite-JDBC driver using the current class loader
-	   
+		// load the sqlite-JDBC driver using the current class loader	   
 	   // Connection connection = null;
 	    try
 	    {
@@ -70,6 +73,8 @@ public class Archive {
 	      }	
 	}
 	
+	
+	//Compte le nbre d'un certain element dans une colonne d'une table
 	public int countElement(String tableNum,String colonne, String valeurEle) throws ClassNotFoundException{
 		int valeur=0;
 		try{
@@ -90,26 +95,76 @@ public class Archive {
 		}
 	
 	
-	public int countElement2(String tableNum,String colonne1, String valeurEle1,String colonne2, String valeurEle2) throws ClassNotFoundException{
-		int valeur=0;
+	
+	// Retourne la liste des articles du menu
+	public String[] getArticleMenuList() throws ClassNotFoundException{
+		String[] article; 
+		int count=0;
 		try{
 			openConnection();
 			
-			rs = statement.executeQuery("SELECT count(*) as Nbre FROM menu WHERE "+colonne1+" == \""+valeurEle1+"\"AND "+colonne2+" == \""+valeurEle2+"\"");
-			valeur=rs.getInt("Nbre");
+			rs = statement.executeQuery("SELECT count(*) FROM menu" );
+			article=new String[rs.getInt(1)];
+			
+			rs = statement.executeQuery("SELECT nom FROM menu" );
+			
+			while(rs.next()) {
+
+				article[count]=rs.getString(1);
+				
+			    count++;
+			}
 			
 			closeConnection();	
 		}
 		catch(Exception e)
 		{
-			
-			System.err.println(e);
+			article=new String[1];
+			System.err.println("erroor"+e);
 		}
-			return(valeur);
+			return(article);
 		
 		}
 	
-	public int ElementPeriod(String date1, String date2) throws ClassNotFoundException{
+	// Retourne le nombre de fois qu'un article est commander entre date1 et date2
+		public int getTotalUnArticle(String articleAuMenu, String date1, String date2) throws ClassNotFoundException{
+			ArrayList<String> valeur = new ArrayList<String>();
+			int total=0;
+			try{
+				openConnection();
+				
+				rs = statement.executeQuery("SELECT * FROM tableCommande WHERE dateCreation >= \""+date1+"\" AND dateCreation  <= \""+date2+"\"" );
+				
+				while(rs.next()) {
+
+					valeur.add(rs.getString ("numeroCommande"));
+				
+				    
+				}
+				
+				for (int i=0;i<valeur.size();i++){
+					rs = statement.executeQuery("SELECT sum(\"quantite\") FROM ligneCommande WHERE numeroCommande = "+valeur.get(i)+" AND codeMenu IN (SELECT code FROM menu WHERE nom = \""+articleAuMenu+"\")");
+					
+					total=total+rs.getInt(1);
+				}
+				
+				
+				
+				
+				closeConnection();	
+			}
+			catch(Exception e)
+			{
+				
+				System.err.println("erroor"+e);
+			}
+				return(total);
+			
+			}
+	
+	
+	// Retourne le nombre d'article du menu commander entre date1 et date2 
+	public int getTotalDesArticles(String date1, String date2) throws ClassNotFoundException{
 		ArrayList<String> valeur = new ArrayList<String>();
 		int total=0;
 		try{
@@ -121,10 +176,11 @@ public class Archive {
 
 				valeur.add(rs.getString ("numeroCommande"));
 			
-			    //System.out.println(valeur);
+			    
 			}
 			
 			for (int i=0;i<valeur.size();i++){
+			
 				rs = statement.executeQuery("SELECT sum(\"quantite\") FROM ligneCommande WHERE numeroCommande = "+valeur.get(i));
 				total=total+rs.getInt(1);
 			}
@@ -146,10 +202,72 @@ public class Archive {
 	
 	
 	
+	// Retourne le temps moyen des commandes clients
+		public int DureeCommande(String date1, String date2) throws ClassNotFoundException{
+			ArrayList<String> valeur = new ArrayList<String>();
+			DateFormat formatter = new SimpleDateFormat("HH:mm");
+			Calendar cal1 = Calendar.getInstance();
+			Calendar cal2 = Calendar.getInstance();
+			int cal3=0;
+			
+			
+			try{
+				openConnection();
+				
+				rs = statement.executeQuery("SELECT * FROM tableCommande WHERE dateCreation >= \""+date1+"\" AND dateCreation  <= \""+date2+"\"" );
+				
+				while(rs.next()) {
+
+					valeur.add(rs.getString ("numeroCommande"));
+				
+				    
+				}
+				
+				System.out.println("ici");				
+				Date dt;
+				for (int i=0;i<valeur.size();i++){
+					try {
+						rs = statement.executeQuery("SELECT heureDebut FROM tableCommande WHERE numeroCommande = "+valeur.get(i));
+					
+						dt = formatter.parse(rs.getString(1));
+						cal1.setTime(dt);
+						  				
+						rs = statement.executeQuery("SELECT heureFin FROM tableCommande WHERE numeroCommande = "+valeur.get(i));
+					
+						dt = formatter.parse(rs.getString(1));
+						cal2.setTime(dt);
+					
+						cal3=cal3+((int)cal2.getTimeInMillis()-(int)cal1.getTimeInMillis());	
+						
+					} catch (Exception e) 
+						{
+						  // This can happen if you are trying to parse an invalid date, e.g., 25:19:12.
+						  // Here, you should log the error and decide what to do next
+						  e.printStackTrace();
+						}
+				}
+				
+				if (valeur.size()!=0){
+				cal3=cal3/valeur.size();
+				}
+				else{
+					cal3=0;
+				}
+				
+				
+				closeConnection();	
+			}
+			catch(Exception e)
+			{
+				
+				System.err.println("erroor"+e);
+			}
+				return(cal3/(1000*60));
+			
+			}
 	
 	
 	
-	/*
 	
 	public static void getDescPrix(int code) throws ClassNotFoundException
   {
@@ -194,21 +312,8 @@ public class Archive {
       }
     }
   }
-	*/
 	
 	
-	
-	
-	/*
-	private static String nom;
-	private static String typeMenu;
-	private static String description;
-	private static double prix;
-	
-	
-	public countElement(String tableNum, String eLement){
-	SELECT count(nom) FROM table1 WHERE (nom == "nom1" OR nom == "nom2")
-	}
 	
 	public static void selectArticle(int code){
 		try {
@@ -237,5 +342,5 @@ public class Archive {
 	public static String getTypeMenu1(){
 		return typeMenu;
 	}
-	*/
+	
 }

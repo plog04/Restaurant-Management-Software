@@ -1,80 +1,102 @@
 package Systeme;
 
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.*;
-import javax.swing.*;
+//import java.util.ArrayList;
+//import java.util.*;
 
-public class InterfStatistique extends Fenetre{
+
+import javax.swing.*;
+//import javax.swing.table.JTableHeader;
+
+
+public class InterfStatistique extends Fenetre implements ActionListener{
 	
 		/**
 		 * 
 		 */
 	
-	
+		Statistique Stats;
 		private static final long serialVersionUID = 1L;
 		private JPanel pCommandes = new JPanel();
 		
-		private JComboBox cbListeTable;
+		private JComboBox<String> cbListeTable;
 		private String[] listeTable = new String[] {"Type de donnée", "Popularité du menu", "Popularité d'un article du menu", "Temps moyen par client"};
-		private JComboBox cbListeCommande;
-		private String[] listeCommande = new String[] {"Période","Journalier", "Hebdomadaire", "Mensuelle"};
+		
+		private JComboBox<String> cbListeCommande;
+		private String[] listeCommande = new String[] {"Periode","Journalier", "Hebdomadaire", "Mensuelle"};
+		
+		private JComboBox<String> cbListeMenu;
+		//private String[] listeMenu;
+		
 		private JPanel pListeTables = new JPanel();
+		private JPanel plisteMenu = new JPanel();
 		private JPanel pListeCommandes = new JPanel();
 		private JPanel pAjouterCommande = new JPanel();
+		
 		private JButton bAjouterCommande = new JButton("Generer la table");
+		
 		
 				
 		//Table des resultat pour faire des tests
-		private String[][] tableResultat = new String[52][2];
-		//private String[][] tableResultat= {{"jour1","1"},{"jour2","2"},{"jour3","3"},{"jour4","5"}};
-		private String[] entetes = {"jour","Quantite"};
+		private String[][] tableResultat=new String[52][2];
+	
+		private String[] entetes = {"Quantite","Periode"};
 		
 		
-		JTable tableau = new JTable(tableResultat, entetes);
+		JTable tableau= new JTable(tableResultat, entetes); 
+		
+
+		
+		Archive mesArchives;
 		
 		
-		//test de commande
-		private testlignecommande test1 = new testlignecommande("test1");
-		private testlignecommande test2 = new testlignecommande("test2");
-		
-		private testlignecommande[] listeUneCommande = new testlignecommande[] {test1, test2};
-		//private String[] listeUneCommande = new String[] {"item","zitem","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","item","itemfin"};
-		
-		
-		private JList tCommande = new JList(listeUneCommande);
-		private JScrollPane spCommande = new JScrollPane(tCommande);
-		
-		private JPanel pBoutons = new JPanel();
-		private JButton bAjouterItem = new JButton("Ajouter item");
-		private JButton bRetirerItem = new JButton("Retirer item");
-		private JButton bNotifier = new JButton("Notifier");
-		private JButton bPayerCommande = new JButton("Payer la commande");
-		
-		public InterfStatistique() {
-		
-			
+		public InterfStatistique(Statistique monStats) {
 			
 			super();
+			Stats=monStats;
+			mesArchives = Stats.archDonnee;
 			this.setTitle("Serveur");
 			cFenetre.setLayout(new BorderLayout());
 			cFenetre.add(pCommandes, BorderLayout.WEST);
 			
-			for (int i =0;i<52;i++){
+			
+			
+			for (int i =0;i<tableResultat.length;i++){
 				
 					tableResultat[i][0]= "jour"+i;
 					tableResultat[i][1]= String.valueOf(i);
 				
 			}
 			
-			cbListeTable = new JComboBox(listeTable);
+			cbListeTable = new JComboBox<String>(listeTable);
 			cbListeTable.setSize(new Dimension(100,100));
-			cbListeCommande = new JComboBox(listeCommande);
+			
+			cbListeCommande = new JComboBox<String>(listeCommande);
 			cbListeCommande.setSize(new Dimension(100,100));
 			
-			pCommandes.setLayout(new GridLayout(3, 1));
+			try{
+				cbListeMenu = new JComboBox<String>(mesArchives.getArticleMenuList());
+			}
+			catch(Exception e){
+				System.err.println(e);
+			}
+			
+			cbListeMenu.setSize(new Dimension(100,100));
+			
+			
+			pCommandes.setLayout(new GridLayout(4, 1));
 			
 			pCommandes.add(pListeTables);
 			pListeTables.setLayout(new FlowLayout());
 			pListeTables.add(cbListeTable);
+			
+			pCommandes.add(plisteMenu);
+			plisteMenu.setLayout(new FlowLayout());
+			plisteMenu.add(cbListeMenu);
+			
 			
 			pCommandes.add(pListeCommandes);
 			pListeCommandes.setLayout(new FlowLayout());
@@ -92,20 +114,95 @@ public class InterfStatistique extends Fenetre{
 			add(p, BorderLayout.CENTER);
 			
 			
-			//cFenetre.add(tableau.getTableHeader(), BorderLayout.NORTH);
-			//cFenetre.add(tableau, BorderLayout.CENTER);
 			
-			//cFenetre.add(spCommande, BorderLayout.CENTER);
-			cFenetre.add(pBoutons, BorderLayout.SOUTH);
 			
-			pBoutons.setLayout(new GridLayout(1,4));
-			//pBoutons.add(bAjouterItem);
-			//pBoutons.add(bRetirerItem);
-			//pBoutons.add(bNotifier);
-			//pBoutons.add(bPayerCommande);
+			bAjouterCommande.addActionListener(this);
+			cbListeTable.addActionListener(this);
+			
 			
 			this.setVisible(true);
+			plisteMenu.setVisible(false);
 		}
+		
+		
+		public void actionPerformed(ActionEvent e){
+		
+			
+			Object source = e.getSource();
+			
+			if (source == cbListeTable){
+				if (String.valueOf(cbListeTable.getSelectedItem())=="Popularité d'un article du menu"){
+					plisteMenu.setVisible(true);
+				}
+				else{
+					plisteMenu.setVisible(false);
+				}
+				
+			}
+			else if(source == bAjouterCommande){
+				
+				
+				Object selected1= cbListeTable.getSelectedItem();
+				Object selected2= cbListeCommande.getSelectedItem();
+				if (selected2!="Periode"){
+				try{
+					switch (String.valueOf(selected1)){
+						case "Popularité d'un article du menu":
+					
+					tableau.getColumnModel().getColumn(0).setHeaderValue("Quantite");
+					tableau.getColumnModel().getColumn(1).setHeaderValue("Periode");
+				
+					Stats.setTableau(String.valueOf(selected1), String.valueOf(selected2), String.valueOf(cbListeMenu.getSelectedItem()));
+					setDonneeDansTable(Stats.getTableau());
+					break;
+							case "Popularité du menu":
+					tableau.getColumnModel().getColumn(0).setHeaderValue("Quantite");
+					tableau.getColumnModel().getColumn(1).setHeaderValue("Periode");
+					Stats.setTableau(String.valueOf(selected1), String.valueOf(selected2));
+					setDonneeDansTable(Stats.getTableau());
+					break;
+							case "Temps moyen par client":
+					tableau.getColumnModel().getColumn(0).setHeaderValue("Durée moyenne (min)");
+					tableau.getColumnModel().getColumn(1).setHeaderValue("Periode");
+					
+					Stats.setTableau(String.valueOf(selected1), String.valueOf(selected2));
+					setDonneeDansTable(Stats.getTableau());
+					break;	
+							default: break;
+					}
+				}
+				
+				
+				catch(Exception ex){
+					System.err.println(ex);
+				}
+				}
+				
+			}
+			
+			
+		}
+		
+		
+		public void setDonneeDansTable(String[][] nouvelleTableDonnee){
+				
+			
+			
+			for (int i =0;i<nouvelleTableDonnee.length;i++){
+				
+				tableResultat[i][0]= nouvelleTableDonnee[i][0];
+				tableResultat[i][1]= nouvelleTableDonnee[i][1];
+			
+			}
+			
+			for (int i=nouvelleTableDonnee.length;i<tableResultat.length;i++){
+				tableResultat[i][0]= "";
+				tableResultat[i][1]= "";
+			}
+			
+			repaint();
+		}
+	
 	
 
 }

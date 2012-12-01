@@ -1,188 +1,65 @@
 package Systeme;
 import java.util.*;
+//import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 public class Statistique {
 	
 	String[][] v; // table avec dimension initial 
 	String axeY;
 	String periode;
 	Calendar calendar;
-	int dayOfMonth;
-	int monthOfYear;
-	int weekOfYear;
-	int dayOfWeek;
-	int year;
-	
-	int COLONNE_JOUR=3;
-	int COLONNE_MOIS=4;
-	int COLONNE_ANNEE=5;
-	int COLONNE_QTY=2;
-	int COLONNE_ARTICLEMENU=1;
-	int COLONNE_COMMANDE=0;
-	int COLONNE_HEUREDEBUT=2;
-	int COLONNE_HEUREFIN=3;
-	
 	Archive archDonnee;
-	
+	SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat time_format = new SimpleDateFormat("HH:mm");
 	public Statistique(){
 		calendar = Calendar.getInstance();
-		dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-		weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
-		monthOfYear = calendar.get(Calendar.MONTH);
-		dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-		year=calendar.get(Calendar.YEAR);
-		
+	
 		archDonnee= new Archive();
 	}
 	
 	
 	
 	
+	public String[][] getTableau (){
+		return(v);
+	}
 	
-	
-	public void afficherTableau (String[][] monTableau){
-		for (int i=0;i<monTableau.length;i++){
-			
-			for (int j=0;j<2;j++){
-				System.out.print(" | "+ monTableau[i][j]);
-			}
-			System.out.println();
+	public void setTableau(String axeDesY, String periodeTemps)throws ClassNotFoundException{
+		if (axeDesY == "Popularité du menu"){
+			creerTableToutArticleMenu(periodeTemps);
 		}
+		else if (axeDesY == "Temps moyen par client") {
+				creerTablePrepCommande(periodeTemps);
+			}
+			else{
+				System.out.println("Mauvais choix de type de donnée");
+			}
+				
 		
 	}
-
 	
-	public static int mod(int N, int M){
-		if (N<0){
-			return mod(M+N, M);
+	public void setTableau(String axeDesY, String periodeTemps, String articleDuMenu)throws ClassNotFoundException{
+		if (axeDesY == "Popularité d'un article du menu"){
+			creerTableUnArticleMenu(articleDuMenu, periodeTemps);
 		}
 		else{
-			if(N<M)
-				return N;
-			else
-				return mod(N-M,M);		
+			System.out.println("Mauvais choix de type de donnée");
 		}
 	}
-	
+		
 	
 	/**
 	 *  Cas 1 Cherche la quantité par periode choisie d'un articleMenu specifique dans base de donnée
 	 *  
 	 */
 	 
-	/*public void creerTableUnArticleMenu(String articleMenu, String periode){
+	public void creerTableUnArticleMenu(String articleMenu, String periode)throws ClassNotFoundException{
 		
-		int maligne=0;
 		int qtyArticle=0;
-		int colonneDate=0;
 		
-		switch (periode){
-		case "Journalier":  
-			v = new String[31][2];
-			v[0][0]="Quantité";
-			v[0][1]="Jour";
-			// Creons la table journalier
-			int m = 1;
-			maligne=Archive.longueurTable(tableNom)-1;
-			while(m<v.length){
-				
-				if (Archive.getTableDonnee(tableNom,COLONNE_ARTICLEMENU,maligne)==articleMenu && Archive.getTableDonnee(tableNom,COLONNE_JOUR,maligne)==calendar.get(Calendar.DATE) && Archive.getTableDonnee(tableNom,COLONNE_MOIS,maligne)==calendar.get(Calendar.MONTH)+1 && Archive.getTableDonnee(tableNom,COLONNE_ANNEE,maligne)==calendar.get(Calendar.YEAR)){
-					qtyArticle=qtyArticle+Archive.getTableDonnee(tableNom,COLONNE_QTY,maligne);
-					
-				}
-				else{
-					v[m][0]=String.valueOf(qtyArticle);
-					v[m][1]=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+String.valueOf(calendar.get(Calendar.YEAR));
-					calendar.add(Calendar.DAY_OF_YEAR, -1);
-					m++;
-					qtyArticle=0;
-					}
-				maligne--;
-			}		
-		
-			break;
-		case "Hebdomadaire": 
-			 
-			v = new String [53][2];
-			v[0][0]="Quantité";
-			v[0][1]="Semaine";
-			// Creons la table hebdomadaire
-			m = 1;
-			int semaine=calendar.get(Calendar.WEEK_OF_YEAR);
-			maligne=Archive.longueurTable(tableNom)-1;
-			while(m<v.length){
-							
-				if (Archive.getTableDonnee(tableNom,COLONNE_ARTICLEMENU,maligne)==articleMenu && Archive.getTableDonnee(tableNom,COLONNE_JOUR,maligne)==calendar.get(Calendar.DATE) && 
-						Archive.getTableDonnee(tableNom,COLONNE_MOIS,maligne)==calendar.get(Calendar.MONTH)+1 && 
-						Archive.getTableDonnee(tableNom,COLONNE_ANNEE,maligne)==calendar.get(Calendar.YEAR)){
-					qtyArticle=qtyArticle+Archive.getTableDonnee(tableNom,COLONNE_QTY,maligne);
-					
-				}
-				else{
-					calendar.add(Calendar.DAY_OF_YEAR, -1);
-					if (semaine!=calendar.get(Calendar.WEEK_OF_YEAR)){
-						v[m][0]=String.valueOf(qtyArticle);
-						v[m][1]="Semaine du "+String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.WEEK_OF_MONTH))+"-"+String.valueOf(calendar.get(Calendar.YEAR));
-						m++;
-						semaine=calendar.get(Calendar.WEEK_OF_YEAR);
-						qtyArticle=0;
-					}
-				}
-				maligne--;
-			}		
-			break;
-			
-		case "Mensuel": break; colonneDate=COLONNE_MOIS; 
-		v = new String [13][2]; 
-		v[0][0]="Quantité";
-		v[0][1]="Mois";
-		
-		// Creons la table mensuel
-		m = 1;
-		int mois=calendar.get(Calendar.MONTH);
-		maligne=Archive.longueurTable(tableNom)-1;
-		while(m<v.length){
-									
-			if (Archive.getTableDonnee(tableNom,COLONNE_ARTICLEMENU,maligne)==articleMenu &&
-				Archive.getTableDonnee(tableNom,COLONNE_JOUR,maligne)==calendar.get(Calendar.DATE) && 
-				Archive.getTableDonnee(tableNom,COLONNE_MOIS,maligne)==calendar.get(Calendar.MONTH)+1 && 
-				Archive.getTableDonnee(tableNom,COLONNE_ANNEE,maligne)==calendar.get(Calendar.YEAR)){
-							
-				qtyArticle=qtyArticle+Archive.getTableDonnee(tableNom,COLONNE_QTY,maligne);
-							
-			}
-			else{
-				calendar.add(Calendar.DAY_OF_YEAR, -1);
-				if (mois!=calendar.get(Calendar.MONTH)){
-					v[m][0]=String.valueOf(qtyArticle);
-					v[m][1]=String.valueOf(calendar.get(Calendar.WEEK_OF_MONTH))+"-"+String.valueOf(calendar.get(Calendar.YEAR));
-					m++;
-					semaine=calendar.get(Calendar.WEEK_OF_YEAR);
-					qtyArticle=0;
-				}
-			}
-			maligne--;
-		}		
-		
-		break;
-		
-		}
-		
-		
-		
-	}
-	*/
-	/**
-	 *  Cas 2 Cherche la quantité par periode choisie de tout les articleMenus dans base de donnée
-	 */
-	
-	public void creerTableToutArticleMenu(String periode)throws ClassNotFoundException{
-	
-		int maligne=0;
-		int qtyArticle=0;
-		int colonneDate=0;
 		calendar = Calendar.getInstance();
-		String dateDebut=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+"-"+String.valueOf(calendar.get(Calendar.YEAR));
-		String dateFin=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+"-"+String.valueOf(calendar.get(Calendar.YEAR));;
+		String dateDebut=date_format.format(calendar.getTime());
+		String dateFin=date_format.format(calendar.getTime());
 		
 		switch (periode){
 		case "Journalier":  
@@ -193,91 +70,208 @@ public class Statistique {
 			
 			while(m<v.length){
 						
-				dateDebut=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+"-"+String.valueOf(calendar.get(Calendar.YEAR));
-				dateFin=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+"-"+String.valueOf(calendar.get(Calendar.YEAR));
+				dateDebut=date_format.format(calendar.getTime());
+				dateFin=date_format.format(calendar.getTime());
 				
-				
-				qtyArticle=archDonnee.ElementPeriod(dateDebut,dateFin);
+				qtyArticle=archDonnee.getTotalUnArticle(articleMenu,dateDebut,dateFin);
 				
 				
 				v[m][0]=String.valueOf(qtyArticle);
-				v[m][1]=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+"-"+String.valueOf(calendar.get(Calendar.YEAR));
+				v[m][1]=date_format.format(calendar.getTime());
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
 				m++;
 				qtyArticle=0;
 					
 			}	
-			afficherTableau(v);
+			
 			break;
-			//return(v);
+			
 		default : 
 			v = new String[1][1]; break; 
-			//return(v);
-	/*	
+			
+		
 		case "Hebdomadaire": 
 			 
-			v = new String [53][2];
-			v[0][0]="Quantité";
-			v[0][1]="Semaine";
+			v = new String [52][2];
+			
 			// Creons la table hebdomadaire
-			m = 1;
-			int semaine=calendar.get(Calendar.WEEK_OF_YEAR);
-			maligne=Archive.longueurTable(tableNom)-1;
+			m = 0;
+			int semaine=0;
+		
 			while(m<v.length){
-							
-				if (Archive.getTableDonnee(tableNom,COLONNE_JOUR,maligne)==calendar.get(Calendar.DATE) && 
-						Archive.getTableDonnee(tableNom,COLONNE_MOIS,maligne)==calendar.get(Calendar.MONTH)+1 && 
-						Archive.getTableDonnee(tableNom,COLONNE_ANNEE,maligne)==calendar.get(Calendar.YEAR)){
-					qtyArticle=qtyArticle+Archive.getTableDonnee(tableNom,COLONNE_QTY,maligne);
-					
-				}
-				else{
+				
+				
+				semaine=calendar.get(Calendar.WEEK_OF_YEAR);
+				
+				dateFin=date_format.format(calendar.getTime());
+				
+				while (calendar.get(Calendar.WEEK_OF_YEAR) == semaine) {
 					calendar.add(Calendar.DAY_OF_YEAR, -1);
-					if (semaine!=calendar.get(Calendar.WEEK_OF_YEAR)){
-						v[m][0]=String.valueOf(qtyArticle);
-						v[m][1]="Semaine du "+String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.WEEK_OF_MONTH))+"-"+String.valueOf(calendar.get(Calendar.YEAR));
-						m++;
-						semaine=calendar.get(Calendar.WEEK_OF_YEAR);
-						qtyArticle=0;
-					}
-				}
-				maligne--;
+			    }
+				calendar.add(Calendar.DAY_OF_YEAR, 1);
+				
+				dateDebut=date_format.format(calendar.getTime());
+				qtyArticle=archDonnee.getTotalUnArticle(articleMenu,dateDebut,dateFin);
+				
+				
+				v[m][0]=String.valueOf(qtyArticle);
+				v[m][1]="Semaine du "+date_format.format(calendar.getTime());
+				m++;
+				qtyArticle=0;
+				calendar.add(Calendar.DAY_OF_YEAR, -1);
+				
 			}		
 			break;
 			
-		case "Mensuel": break; colonneDate=COLONNE_MOIS; 
+		case "Mensuelle": 
 		v = new String [13][2]; 
-		v[0][0]="Quantité";
-		v[0][1]="Mois";
+		
 		
 		// Creons la table hebdomadaire
-		m = 1;
-		int mois=calendar.get(Calendar.MONTH);
-		maligne=Archive.longueurTable(tableNom)-1;
+		m = 0;
+		int mois=0; 
+		
 		while(m<v.length){
-									
-			if (Archive.getTableDonnee(tableNom,COLONNE_JOUR,maligne)==calendar.get(Calendar.DATE) && 
-				Archive.getTableDonnee(tableNom,COLONNE_MOIS,maligne)==calendar.get(Calendar.MONTH)+1 && 
-				Archive.getTableDonnee(tableNom,COLONNE_ANNEE,maligne)==calendar.get(Calendar.YEAR)){
-							
-				qtyArticle=qtyArticle+Archive.getTableDonnee(tableNom,COLONNE_QTY,maligne);
-							
-			}
-			else{
+			
+			
+			mois=calendar.get(Calendar.MONTH);
+			
+			dateFin=date_format.format(calendar.getTime());
+			
+			while (calendar.get(Calendar.MONTH) == mois) {
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
-				if (mois!=calendar.get(Calendar.MONTH)){
-					v[m][0]=String.valueOf(qtyArticle);
-					v[m][1]=String.valueOf(calendar.get(Calendar.WEEK_OF_MONTH))+"-"+String.valueOf(calendar.get(Calendar.YEAR));
-					m++;
-					semaine=calendar.get(Calendar.WEEK_OF_YEAR);
-					qtyArticle=0;
-				}
-			}
-			maligne--;
+		    }
+			
+			dateDebut=date_format.format(calendar.getTime());
+			
+			qtyArticle=archDonnee.getTotalUnArticle(articleMenu,dateDebut,dateFin);
+			
+			v[m][0]=String.valueOf(qtyArticle);
+			v[m][1]=calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA_FRENCH)+" "+String.valueOf(calendar.get(Calendar.YEAR));
+			
+			m++;
+			qtyArticle=0;
+			
+						
 		}		
 		
 		break;
-		*/
+		
+		}
+		
+		
+		
+	}
+	
+	/**
+	 *  Cas 2 Cherche la quantité par periode choisie de tout les articleMenus dans base de donnée
+	 */
+	
+	public void creerTableToutArticleMenu(String periode)throws ClassNotFoundException{
+	
+		
+		int qtyArticle=0;
+		
+		calendar = Calendar.getInstance();
+		String dateDebut=date_format.format(calendar.getTime());
+		String dateFin=date_format.format(calendar.getTime());
+		
+		switch (periode){
+		case "Journalier":  
+			v = new String[31][2];
+			
+			// Creons la table journalier
+			int m = 0;
+			
+			while(m<v.length){
+						
+				dateDebut=date_format.format(calendar.getTime());
+				dateFin=date_format.format(calendar.getTime());
+				
+				qtyArticle=archDonnee.getTotalDesArticles(dateDebut,dateFin);
+				
+				
+				v[m][0]=String.valueOf(qtyArticle);
+				v[m][1]=date_format.format(calendar.getTime());
+				calendar.add(Calendar.DAY_OF_YEAR, -1);
+				m++;
+				qtyArticle=0;
+					
+			}	
+			
+			break;
+			
+		default : 
+			v = new String[1][1]; break; 
+			
+		
+		case "Hebdomadaire": 
+			 
+			v = new String [52][2];
+			
+			// Creons la table hebdomadaire
+			m = 0;
+			int semaine=0;
+		
+			while(m<v.length){
+				
+				
+				semaine=calendar.get(Calendar.WEEK_OF_YEAR);
+				
+				dateFin=date_format.format(calendar.getTime());
+				
+				while (calendar.get(Calendar.WEEK_OF_YEAR) == semaine) {
+					calendar.add(Calendar.DAY_OF_YEAR, -1);
+			    }
+				calendar.add(Calendar.DAY_OF_YEAR, 1);
+				
+				dateDebut=date_format.format(calendar.getTime());
+				qtyArticle=archDonnee.getTotalDesArticles(dateDebut,dateFin);
+				
+				
+				v[m][0]=String.valueOf(qtyArticle);
+				v[m][1]="Semaine du "+date_format.format(calendar.getTime());
+				m++;
+				qtyArticle=0;
+				calendar.add(Calendar.DAY_OF_YEAR, -1);
+				
+			}		
+			break;
+			
+		case "Mensuelle": 
+		v = new String [13][2]; 
+		
+		
+		// Creons la table hebdomadaire
+		m = 0;
+		int mois=0; 
+		
+		while(m<v.length){
+			
+			
+			mois=calendar.get(Calendar.MONTH);
+			
+			dateFin=date_format.format(calendar.getTime());
+			
+			while (calendar.get(Calendar.MONTH) == mois) {
+				calendar.add(Calendar.DAY_OF_YEAR, -1);
+		    }
+			
+			dateDebut=date_format.format(calendar.getTime());
+			
+			qtyArticle=archDonnee.getTotalDesArticles(dateDebut,dateFin);
+			
+			v[m][0]=String.valueOf(qtyArticle);
+			v[m][1]=calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA_FRENCH)+" "+String.valueOf(calendar.get(Calendar.YEAR));
+			
+			m++;
+			qtyArticle=0;
+			
+						
+		}		
+		
+		break;
+		
 		}
 		
 		
@@ -286,123 +280,132 @@ public class Statistique {
 	}
 	
 	
-	
+
 	/**
-	 *  Cas 3 Chercher la durée des commandes en fonction d'une periode.
+	 * Cas 3 Chercher la durée des commandes en fonction d'une periode.
 	 */
-	/*
-	public void creerTableDureeCommande(String periode){
-		int maligne=0;
-		int dureeMoyenneCommande=0;
-		int colonneDate=0;
-		
-		int COLONNE_JOUR=1;
-		int COLONNE_MOIS=2;
-		int COLONNE_ANNEE=3;
+	
+	public void creerTablePrepCommande(String periode)throws ClassNotFoundException{
+		//Calendar tempsMoy = Calendar.getInstance();
+		int tempsMoy=0;
+		calendar = Calendar.getInstance();
+		String dateDebut=date_format.format(calendar.getTime());
+		String dateFin=date_format.format(calendar.getTime());
 		
 		switch (periode){
 		case "Journalier":  
 			v = new String[31][2];
-			v[0][0]="Quantité";
-			v[0][1]="Jour";
+			
 			// Creons la table journalier
-			int m = 1;
-			int n=0;
-			maligne=Archive.longueurTable(tableCommande)-1;
+			int m = 0;
+			
+			
 			while(m<v.length){
+						
+				dateDebut=date_format.format(calendar.getTime());
+				dateFin=date_format.format(calendar.getTime());
 				
-				if (Archive.getTableDonnee(tableNom,COLONNE_JOUR,maligne)==calendar.get(Calendar.DATE) && Archive.getTableDonnee(tableNom,COLONNE_MOIS,maligne)==calendar.get(Calendar.MONTH)+1 && Archive.getTableDonnee(tableNom,COLONNE_ANNEE,maligne)==calendar.get(Calendar.YEAR)){
-					n++;
-					dureeMoyenneCommande=(dureeMoyenneCommande+(Archive.getTableDonnee(tableNom,COLONNE_HEUREFIN,maligne)-Archive.getTableDonnee(tableNom,COLONNE_HEUREDEBUT,maligne)))/n;
-
+				tempsMoy=archDonnee.DureeCommande(dateDebut,dateFin);
+				
+				if (tempsMoy == 0){
+					v[m][0]="---";
+				}else{
+					v[m][0]=String.valueOf(tempsMoy);
 				}
-				else{
-					v[m][0]=String.valueOf(qtyArticle);
-					v[m][1]=String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.MONTH)+1)+String.valueOf(calendar.get(Calendar.YEAR));
-					calendar.add(Calendar.DAY_OF_YEAR, -1);
-					m++;
-					n=0;
-					dureeMoyenneCommande=0;
-					}
-				maligne--;
-			}		
-		
+				
+				v[m][1]=date_format.format(calendar.getTime());
+				
+				
+				calendar.add(Calendar.DAY_OF_YEAR, -1);
+				m++;
+				
+					
+			}	
+			
 			break;
+			
+		default : 
+			v = new String[1][1]; break; 
+			
+		
 		case "Hebdomadaire": 
 			 
-			v = new String [53][2];
-			v[0][0]="Quantité";
-			v[0][1]="Semaine";
+			v = new String [52][2];
+			
 			// Creons la table hebdomadaire
-			m = 1;
-			int semaine=calendar.get(Calendar.WEEK_OF_YEAR);
-			maligne=Archive.longueurTable(tableNom)-1;
+			m = 0;
+			int semaine=0;
+		
 			while(m<v.length){
-							
-				if (Archive.getTableDonnee(tableNom,COLONNE_JOUR,maligne)==calendar.get(Calendar.DATE) && 
-						Archive.getTableDonnee(tableNom,COLONNE_MOIS,maligne)==calendar.get(Calendar.MONTH)+1 && 
-						Archive.getTableDonnee(tableNom,COLONNE_ANNEE,maligne)==calendar.get(Calendar.YEAR)){
-					qtyArticle=qtyArticle+Archive.getTableDonnee(tableNom,COLONNE_QTY,maligne);
-					
-				}
-				else{
+				
+				
+				semaine=calendar.get(Calendar.WEEK_OF_YEAR);
+				
+				dateFin=date_format.format(calendar.getTime());
+				
+				while (calendar.get(Calendar.WEEK_OF_YEAR) == semaine) {
 					calendar.add(Calendar.DAY_OF_YEAR, -1);
-					if (semaine!=calendar.get(Calendar.WEEK_OF_YEAR)){
-						v[m][0]=String.valueOf(qtyArticle);
-						v[m][1]="Semaine du "+String.valueOf(calendar.get(Calendar.DATE))+"-"+String.valueOf(calendar.get(Calendar.WEEK_OF_MONTH))+"-"+String.valueOf(calendar.get(Calendar.YEAR));
-						m++;
-						semaine=calendar.get(Calendar.WEEK_OF_YEAR);
-						qtyArticle=0;
-					}
+			    }
+				calendar.add(Calendar.DAY_OF_YEAR, 1);
+				
+				dateDebut=date_format.format(calendar.getTime());
+				tempsMoy=archDonnee.DureeCommande(dateDebut,dateFin);
+				
+				
+				if (tempsMoy == 0){
+					v[m][0]="---";
+				}else{
+					v[m][0]=String.valueOf(tempsMoy);
 				}
-				maligne--;
+				v[m][1]="Semaine du "+date_format.format(calendar.getTime());
+				m++;
+				
+				calendar.add(Calendar.DAY_OF_YEAR, -1);
+				
 			}		
 			break;
 			
-		case "Mensuel": break; colonneDate=COLONNE_MOIS; 
+		case "Mensuelle": 
 		v = new String [13][2]; 
-		v[0][0]="Quantité";
-		v[0][1]="Mois";
+		
 		
 		// Creons la table hebdomadaire
-		m = 1;
-		int mois=calendar.get(Calendar.MONTH);
-		maligne=Archive.longueurTable(tableNom)-1;
+		m = 0;
+		int mois=0; 
+		
 		while(m<v.length){
-									
-			if (Archive.getTableDonnee(tableNom,COLONNE_JOUR,maligne)==calendar.get(Calendar.DATE) && 
-				Archive.getTableDonnee(tableNom,COLONNE_MOIS,maligne)==calendar.get(Calendar.MONTH)+1 && 
-				Archive.getTableDonnee(tableNom,COLONNE_ANNEE,maligne)==calendar.get(Calendar.YEAR)){
-							
-				qtyArticle=qtyArticle+Archive.getTableDonnee(tableNom,COLONNE_QTY,maligne);
-							
-			}
-			else{
+			
+			
+			mois=calendar.get(Calendar.MONTH);
+			
+			dateFin=date_format.format(calendar.getTime());
+			
+			while (calendar.get(Calendar.MONTH) == mois) {
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
-				if (mois!=calendar.get(Calendar.MONTH)){
-					v[m][0]=String.valueOf(qtyArticle);
-					v[m][1]=String.valueOf(calendar.get(Calendar.WEEK_OF_MONTH))+"-"+String.valueOf(calendar.get(Calendar.YEAR));
-					m++;
-					semaine=calendar.get(Calendar.WEEK_OF_YEAR);
-					qtyArticle=0;
-				}
+		    }
+			
+			dateDebut=date_format.format(calendar.getTime());
+			
+			tempsMoy=archDonnee.DureeCommande(dateDebut,dateFin);
+			
+			if (tempsMoy == 0){
+				v[m][0]="---";
+			}else{
+				v[m][0]=String.valueOf(tempsMoy);
 			}
-			maligne--;
+			v[m][1]=calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA_FRENCH)+" "+String.valueOf(calendar.get(Calendar.YEAR));
+			
+			m++;
+		
+			
+						
 		}		
 		
 		break;
 		
+		}
 		
 		
-	}
-	
-*/	
-
-	/**
-	 * Cas 4 preparation commande, va chercher le temps de tout les preparations de tout les articles
-	 */
-	
-	public void creerTablePrepCommande(String axeX){
 		
 	}
 	

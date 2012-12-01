@@ -19,15 +19,17 @@ public class Main {
 		int nbreArticle=0;
 	//ArrayList<String> ListeCommande = new ArrayList<String>();	
 	/*
-		nbreArticle = monArchive.ElementPeriod("2012-11-22","2012-11-22"); //marche bien!!
+		nbreArticle = monArchive.ElementPeriod("2012-10-28","2012-11-03"); //marche bien!!
 	System.out.println(nbreArticle); // marche bien!!
 		*/
 	//SELECT count(*) FROM tableCommande WHERE dateCreation >= '2012-11-17'  AND dateCreation <'2012-11-30'
-		//InterfStatistique fenetre = new InterfStatistique();
 		
 		Statistique Stat = new Statistique();
 		Stat.creerTableToutArticleMenu("Journalier");
+		InterfStatistique fenetre = new InterfStatistique(Stat);
 		
+		
+			
 		
 	}
 
