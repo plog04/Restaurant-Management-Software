@@ -1,46 +1,46 @@
-/*import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-//import java.util.Scanner;*/
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.Date;
 public class Commande {
 	
-	//private static Scanner scanner = new Scanner(System.in);
 	private Date date = new Date();
-	private double total = 0.0;
-	private static LigneCommande ligneCommande;
-	private static String description;
-	private static String typeMenu;
-	private String nom;
-	private double prix;
-	private double sousTotal;
-	private int quantite;	
-	
-	private Commande commande;
-	/*
-	public Commande(Date date, LigneCommande ligneCommande, double total){
+	//private 
+	ArrayList<LigneCommande> listeLigneCommande = new ArrayList<LigneCommande>();
+	private double total;
+		
+	public Commande(Date date){
 		this.date = date;
-		this.ligneCommande = ligneCommande;
-		this.total = total;
 	}
 	
-	public void creerNouvelleCommande(){
-		commande = new Commande(date, ligneCommande,total);
-	}*/
-	
-	public static void main (String Arg[]){
-		
-		ligneCommande.selectionnerArticle(501, 10);
-		
-		description = ligneCommande.getDescrip();
-		nom = ligneCommande.getNom();
-		typeMenu = ligneCommande.getTypeMenu();
-		sousTotal = ligneCommande.getSousTotal();
-		System.out.println(description+" "+nom+" "+typeMenu+" "+sousTotal);
+	public void creerLigneCommande(int code, int quantite){
+		LigneCommande lignec = new LigneCommande(code, quantite);
+		if(lignec.getDescrip() != null){
+		listeLigneCommande.add(lignec);
+		total = total + lignec.getSousTotal();
+		}
 	}
-	/*
-	public void creerLigneCommande(int quantite){
-		LigneCommande ligneC = new LigneCommande(quantite);
-		ligneC.creerNouvelleLigneCommande();
-	}*/
+
+	
+	public double getTotal(){
+		return total;
+	}
+	
+	public void supprimerLigneCommande(int index){
+		total = total - listeLigneCommande.get(index).getSousTotal();
+		listeLigneCommande.remove(index);
+	}
+	
+	public String[][] creerTableLigneCommande(){
+		String[][] tableauLigneCommande;
+		tableauLigneCommande = new String[4][listeLigneCommande.size()];
+		for(int i=0; i<listeLigneCommande.size(); i++){
+			LigneCommande ligneComm = listeLigneCommande.get(i);
+			tableauLigneCommande[0][i] = ligneComm.getEtat();
+			tableauLigneCommande[1][i] = ligneComm.getDescrip();
+			tableauLigneCommande[2][i] = ligneComm.getQuantite()+"";
+			tableauLigneCommande[3][i] = ligneComm.getSousTotal()+"";
+		}
+		return tableauLigneCommande;
+	}
+	
 }

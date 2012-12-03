@@ -1,46 +1,58 @@
+import java.util.ArrayList;
+
 
 public class LigneCommande {
 
-	private static  String description;
-	private static  String typeMenu;
-	private static String nom;
-	private double prix;
-	private static double sousTotal;
-	private int quantite;	
+	private   String description;
+	private  double prix;
+	private  double sousTotal;
+	private  int quantite;
+	private String etat;
 	
-	public LigneCommande(int quantite){
-		this.quantite = quantite;
+	public LigneCommande(int code, int quantity){
+		
+		ArrayList<Object> descPrix = new  ArrayList<Object>();
+		try {
+			descPrix = Archive.getDescPrix(code);
+			quantite = quantity;
+		prix = (Double) descPrix.get(1);	
+		sousTotal = prix * quantite;
+		description = (String) descPrix.get(0);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println("L'article n'a pas été trouvé");
+		}
+
+		//System.out.println(description+"\t"+quantite+"\t"+sousTotal);
 	}
 	
-	public static void selectionnerArticle(int code, int quantite) {
-		Archive.selectArticle(code);
+	public String getEtat(){
+		return etat;
+	}
+	
+	public void setEtat(String etat){
+		this.etat = etat;
+	}
+	public int getQuantite(){
+		return quantite;
+	}
+	
+	public void setQuantite(int quantite){
+		this.quantite = quantite;
+		sousTotal = prix*quantite;
 	}
 	
 	public double getSousTotal(){
-		prix = Archive.getPrix1();
-		sousTotal = prix * quantite;
 		return sousTotal;
 	}
 	
 	public String getDescrip(){
-		description = Archive.getDescription1();
 		return description;
 	}
-	public String getNom(){
-		nom = Archive.getNom1();
-		return nom;
+	public String toString(){
+		return etat+" "+description + " " + prix +" " + sousTotal+" "+quantite;
 	}
-	public String getTypeMenu(){
-		typeMenu = Archive.getTypeMenu1();
-		return typeMenu;
-	}
-	public static void main(String [] arg){
-		selectionnerArticle(801, 10);
-		LigneCommande ligneC = new LigneCommande(10);
-		description = ligneC.getDescrip();
-		nom = ligneC.getNom();
-		typeMenu = ligneC.getTypeMenu();
-		sousTotal = ligneC.getSousTotal();
-		System.out.println(description+" "+nom+" "+sousTotal+" "+typeMenu);
-	}
+	
 }

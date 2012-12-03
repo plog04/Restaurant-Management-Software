@@ -1,10 +1,20 @@
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Scanner;
+
+
 public class Restaurant {
-	
+	private static int terminer = 0;
 	private static Restaurant copieRestaurant = null;
-	private LigneCommande ligneCommand;
-	private Commande commandeCourante;
+	private static ArrayList<Commande> listeCommande = new ArrayList<Commande>();
 	
+public static void creerCommande(){
+		Date date = new Date();
+		listeCommande.add(new Commande(date));
+		
+	}
+
 		
 		public static Restaurant copieRestaurant(){
 			if(copieRestaurant == null){
@@ -13,17 +23,37 @@ public class Restaurant {
 			return copieRestaurant;
 		}
 		
-	
-		public static void main(String[] args) {
-			copieRestaurant();
-			copieRestaurant.selectionArticle(501, 10);
-			System.out.println();
-		
-		}
-		
-	public void selectionArticle(int code, int quantite){
-		ligneCommand.selectionnerArticle(code, quantite);
-		commandeCourante.creerLigneCommande(quantite);
-	}
 
+		public static void main (String Arg[]){
+			
+			creerCommande();
+			
+			
+			
+			for (int j =0; j<2; j++) {
+				
+				Scanner ligneCommand = new Scanner(System.in);
+				
+				ligneCommand.useDelimiter("\r\n");
+				System.out.print("Entrez le code : ");
+				int code = Integer.parseInt(ligneCommand.next());
+				System.out.print("Entrez la quantite : ");
+				int quantite = Integer.parseInt(ligneCommand.next());
+				listeCommande.get(0).creerLigneCommande(code, quantite);
+				
+				
+				System.out.println("Commande en cours: Total " + listeCommande.get(0).getTotal());
+				for(int i=0; i<listeCommande.get(0).listeLigneCommande.size(); i++){
+					System.out.println(listeCommande.get(0).listeLigneCommande.get(i).toString());
+				}
+				
+			}
+			System.out.println(listeCommande.get(0).creerTableLigneCommande().toString());
+			listeCommande.get(0).supprimerLigneCommande(1);
+			System.out.println("Commande en cours: Total " + listeCommande.get(0).getTotal());
+			for(int i=0; i<listeCommande.get(0).listeLigneCommande.size(); i++){
+				System.out.println(listeCommande.get(0).listeLigneCommande.get(i).toString());
+			}
+
+}
 }
