@@ -1,8 +1,12 @@
+package Systeme;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
 
-public class IConsulterCommandeServeur extends Fenetre {
+public class IConsulterCommandeServeur extends Fenetre implements ActionListener{
 	
 	/**
 	 * 
@@ -18,7 +22,7 @@ public class IConsulterCommandeServeur extends Fenetre {
 	private JPanel pListeCommandes = new JPanel();
 	private JPanel pAjouterCommande = new JPanel();
 	private JButton bAjouterCommande = new JButton("Ajouter commande");
-	
+	private InterfCompteEntree monEntree;
 	
 	//test de commande
 	private testlignecommande test1 = new testlignecommande("test1");
@@ -36,10 +40,11 @@ public class IConsulterCommandeServeur extends Fenetre {
 	private JButton bRetirerItem = new JButton("Retirer item");
 	private JButton bNotifier = new JButton("Notifier");
 	private JButton bPayerCommande = new JButton("Payer la commande");
-	IConsulterCommandeServeur(){
-		super();
+	IConsulterCommandeServeur(InterfCompteEntree Entree){
+		//super();
+		monEntree = Entree;
 		this.setTitle("Serveur");
-		cFenetre.setLayout(new BorderLayout());
+		//cFenetre.setLayout(new BorderLayout());
 		cFenetre.add(pCommandes, BorderLayout.WEST);
 		
 		cbListeTable = new JComboBox(listeTable);
@@ -62,14 +67,23 @@ public class IConsulterCommandeServeur extends Fenetre {
 		pAjouterCommande.add(bAjouterCommande, BorderLayout.SOUTH);
 		
 		cFenetre.add(spCommande, BorderLayout.CENTER);
-		cFenetre.add(pBoutons, BorderLayout.SOUTH);
+		pRetour.add(pBoutons, BorderLayout.NORTH);
 		
 		pBoutons.setLayout(new GridLayout(1,4));
 		pBoutons.add(bAjouterItem);
 		pBoutons.add(bRetirerItem);
 		pBoutons.add(bNotifier);
 		pBoutons.add(bPayerCommande);
-		
-		this.setVisible(true);
+		bRetour.addActionListener(this);
+		//this.setVisible(true);
+	}
+	
+	public void actionPerformed(ActionEvent e){
+		Object source = e.getSource();
+		if (source==bRetour){
+			
+			this.setVisible(false);
+			monEntree.setVisible(true);
+		}
 	}
 }

@@ -127,7 +127,7 @@ public class Statistique {
 		v = new String [13][2]; 
 		
 		
-		// Creons la table hebdomadaire
+		// Creons la table mensuelle
 		m = 0;
 		int mois=0; 
 		
@@ -141,7 +141,7 @@ public class Statistique {
 			while (calendar.get(Calendar.MONTH) == mois) {
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
 		    }
-			
+			calendar.add(Calendar.DAY_OF_YEAR, 1);
 			dateDebut=date_format.format(calendar.getTime());
 			
 			qtyArticle=archDonnee.getTotalUnArticle(articleMenu,dateDebut,dateFin);
@@ -151,7 +151,7 @@ public class Statistique {
 			
 			m++;
 			qtyArticle=0;
-			
+			calendar.add(Calendar.DAY_OF_YEAR, -1);
 						
 		}		
 		
@@ -242,7 +242,7 @@ public class Statistique {
 		v = new String [13][2]; 
 		
 		
-		// Creons la table hebdomadaire
+		// Creons la table mensuelle
 		m = 0;
 		int mois=0; 
 		
@@ -256,6 +256,7 @@ public class Statistique {
 			while (calendar.get(Calendar.MONTH) == mois) {
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
 		    }
+			calendar.add(Calendar.DAY_OF_YEAR, 1);
 			
 			dateDebut=date_format.format(calendar.getTime());
 			
@@ -266,7 +267,7 @@ public class Statistique {
 			
 			m++;
 			qtyArticle=0;
-			
+			calendar.add(Calendar.DAY_OF_YEAR, -1);
 						
 		}		
 		
@@ -384,6 +385,7 @@ public class Statistique {
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
 		    }
 			
+			calendar.add(Calendar.DAY_OF_YEAR, 1);
 			dateDebut=date_format.format(calendar.getTime());
 			
 			tempsMoy=archDonnee.DureeCommande(dateDebut,dateFin);
@@ -396,7 +398,7 @@ public class Statistique {
 			v[m][1]=calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA_FRENCH)+" "+String.valueOf(calendar.get(Calendar.YEAR));
 			
 			m++;
-		
+			calendar.add(Calendar.DAY_OF_YEAR, -1);
 			
 						
 		}		

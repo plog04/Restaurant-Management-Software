@@ -17,9 +17,11 @@ public class InterfStatistique extends Fenetre implements ActionListener{
 		/**
 		 * 
 		 */
-	
-		Statistique Stats;
+		Statistique Stats = new Statistique();
+		//Statistique Stats;
 		private static final long serialVersionUID = 1L;
+		
+		InterfCompteEntree monEntree;
 		private JPanel pCommandes = new JPanel();
 		
 		private JComboBox<String> cbListeTable;
@@ -53,13 +55,13 @@ public class InterfStatistique extends Fenetre implements ActionListener{
 		Archive mesArchives;
 		
 		
-		public InterfStatistique(Statistique monStats) {
-			
-			super();
-			Stats=monStats;
+		public InterfStatistique(InterfCompteEntree Entree) {
+			monEntree= Entree;
+			//super();
+			//Stats=monStats;
 			mesArchives = Stats.archDonnee;
-			this.setTitle("Serveur");
-			cFenetre.setLayout(new BorderLayout());
+			this.setTitle("Gestionnaire");
+			//cFenetre.setLayout(new BorderLayout());
 			cFenetre.add(pCommandes, BorderLayout.WEST);
 			
 			
@@ -118,9 +120,9 @@ public class InterfStatistique extends Fenetre implements ActionListener{
 			
 			bAjouterCommande.addActionListener(this);
 			cbListeTable.addActionListener(this);
+			bRetour.addActionListener(this);
 			
-			
-			this.setVisible(true);
+			//this.setVisible(true);
 			plisteMenu.setVisible(false);
 		}
 		
@@ -129,6 +131,12 @@ public class InterfStatistique extends Fenetre implements ActionListener{
 		
 			
 			Object source = e.getSource();
+			if (source==bRetour){
+				
+				this.setVisible(false);
+				monEntree.setVisible(true);
+			}
+			
 			
 			if (source == cbListeTable){
 				if (String.valueOf(cbListeTable.getSelectedItem())=="Popularité d'un article du menu"){

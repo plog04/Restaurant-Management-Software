@@ -11,7 +11,7 @@ public class Main {
 		// TODO Auto-generated method stub
 		//IConsulterCommandeServeur fenetre = new IConsulterCommandeServeur();
 		
-		Archive monArchive = new Archive();
+		
 		
 		
 		//System.out.println(monArchive.countElement("menu", "typeMenu", "Boisson"));
@@ -23,11 +23,13 @@ public class Main {
 	System.out.println(nbreArticle); // marche bien!!
 		*/
 	//SELECT count(*) FROM tableCommande WHERE dateCreation >= '2012-11-17'  AND dateCreation <'2012-11-30'
-		
+		///InterfCuisinier test1 = new InterfCuisinier();
+		InterfCompteEntree compteEntree = new InterfCompteEntree();
+		/*
 		Statistique Stat = new Statistique();
 		Stat.creerTableToutArticleMenu("Journalier");
 		InterfStatistique fenetre = new InterfStatistique(Stat);
-		
+		*/
 		
 			
 		
