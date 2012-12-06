@@ -16,9 +16,9 @@ public class InterfCompteEntree extends Fenetre implements ActionListener{
 	//public Archive monArchive = new Archive();
 	 
 	
-	IConsulterCommandeServeur fServeur = new IConsulterCommandeServeur(this);
+	InterfServeur fServeur = new InterfServeur(this);
 	InterfCuisinier fCuisinier = new InterfCuisinier(this);	
-	InterfStatistique fGestionnaire = new InterfStatistique(this);
+	//InterfStatistique fGestionnaire = new InterfStatistique(this);
 	
 	private JButton bServeur = new JButton("Serveur");
 	private JButton bCuisinier = new JButton("Cuisinier");
@@ -38,7 +38,7 @@ public class InterfCompteEntree extends Fenetre implements ActionListener{
 		super();
 		fServeur.setVisible(false);
 		fCuisinier.setVisible(false);
-		fGestionnaire.setVisible(false);
+		//fGestionnaire.setVisible(false);
 		
 		
 		this.setTitle("Compte d'entrée");
@@ -83,8 +83,8 @@ public class InterfCompteEntree extends Fenetre implements ActionListener{
 		}
 		if (source==bGestionnaire){
 			this.setVisible(false);
-			fGestionnaire.pRetour.setVisible(true);
-			fGestionnaire.setVisible(true);
+			//fGestionnaire.pRetour.setVisible(true);
+			//fGestionnaire.setVisible(true);
 			
 			
 		}

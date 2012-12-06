@@ -1,3 +1,5 @@
+package Systeme;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,11 +10,29 @@ public class Restaurant {
 	private static int terminer = 0;
 	private static Restaurant copieRestaurant = null;
 	private static ArrayList<Commande> listeCommande = new ArrayList<Commande>();
+	private static String[] listeTable = new String[] {"Table1", "Table2", "Table3", "Table4"};
 	
-public static void creerCommande(){
+	public static void creerCommande(String table){
 		Date date = new Date();
-		listeCommande.add(new Commande(date));
+		String idCommande = "Commande" + (getListeCommandePourTable(table).size()+1);
+		listeCommande.add(new Commande(date, table, idCommande));
 		
+	}
+
+	public static String[] getListeTable(){
+		return listeTable;
+	}
+	
+	public static ArrayList<Commande> getListeCommandePourTable(String table){
+		ArrayList<Commande> listeCommandeTable = new ArrayList<Commande>();
+		
+		for (int i=0; i<listeCommande.size(); i++){
+			if (listeCommande.get(i).getTable() == table){
+				listeCommandeTable.add(listeCommande.get(i));
+			}
+		}
+		
+		return listeCommandeTable;
 	}
 
 		
@@ -26,8 +46,9 @@ public static void creerCommande(){
 
 		public static void main (String Arg[]){
 			
-			creerCommande();
-			
+			creerCommande("table1");
+		
+	
 			
 			
 			for (int j =0; j<2; j++) {
