@@ -160,21 +160,23 @@ public class InterfStatistique extends Fenetre implements ActionListener{
 					
 					tableau.getColumnModel().getColumn(0).setHeaderValue("Quantite");
 					tableau.getColumnModel().getColumn(1).setHeaderValue("Periode");
-				
-					Stats.setTableau(String.valueOf(selected1), String.valueOf(selected2), String.valueOf(cbListeMenu.getSelectedItem()));
+					
+					Stats.creerTableUnArticleMenu(String.valueOf(cbListeMenu.getSelectedItem()), String.valueOf(selected2));
+					//Stats.setTableauUnArticle(String.valueOf(selected1), String.valueOf(selected2), String.valueOf(cbListeMenu.getSelectedItem()));
 					setDonneeDansTable(Stats.getTableau());
 					break;
 							case "Popularité du menu":
 					tableau.getColumnModel().getColumn(0).setHeaderValue("Quantite");
 					tableau.getColumnModel().getColumn(1).setHeaderValue("Periode");
-					Stats.setTableau(String.valueOf(selected1), String.valueOf(selected2));
+					Stats.creerTableToutArticleMenu(String.valueOf(selected2));
+					//Stats.setTableauToutArticle(String.valueOf(selected1), String.valueOf(selected2));
 					setDonneeDansTable(Stats.getTableau());
 					break;
 							case "Temps moyen par client":
 					tableau.getColumnModel().getColumn(0).setHeaderValue("Durée moyenne (min)");
 					tableau.getColumnModel().getColumn(1).setHeaderValue("Periode");
-					
-					Stats.setTableau(String.valueOf(selected1), String.valueOf(selected2));
+					Stats.creerTableDureeCommande(String.valueOf(selected2));
+					//Stats.setTableauToutArticle(String.valueOf(selected1), String.valueOf(selected2));
 					setDonneeDansTable(Stats.getTableau());
 					break;	
 							default: break;

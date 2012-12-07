@@ -4,13 +4,13 @@ import java.util.*;
 import java.text.SimpleDateFormat;
 public class Statistique {
 	
-	String[][] v; // table avec dimension initial 
-	String axeY;
-	String periode;
+	String[][] tableDeDonnee; // table avec dimension initial 
+	//String axeY;
+	//String periode;
 	Calendar calendar;
 	Archive archDonnee;
 	SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
-	SimpleDateFormat time_format = new SimpleDateFormat("HH:mm");
+	//SimpleDateFormat time_format = new SimpleDateFormat("HH:mm");
 	
 	
 	// Constructeur
@@ -24,15 +24,15 @@ public class Statistique {
 	
 	
 	public String[][] getTableau (){
-		return(v);
+		return(tableDeDonnee);
 	}
-	
-	public void setTableau(String axeDesY, String periodeTemps)throws ClassNotFoundException{
+	/*
+	public void setTableauTout1Article(String axeDesY, String periodeTemps)throws ClassNotFoundException{
 		if (axeDesY == "Popularité du menu"){
 			creerTableToutArticleMenu(periodeTemps);
 		}
 		else if (axeDesY == "Temps moyen par client") {
-				creerTablePrepCommande(periodeTemps);
+			creerTableDureeCommande(periodeTemps);
 			}
 			else{
 				System.out.println("Mauvais choix de type de donnée");
@@ -41,7 +41,7 @@ public class Statistique {
 		
 	}
 	
-	public void setTableau(String axeDesY, String periodeTemps, String articleDuMenu)throws ClassNotFoundException{
+	public void setTableauUnArticle(String axeDesY, String periodeTemps, String articleDuMenu)throws ClassNotFoundException{
 		if (axeDesY == "Popularité d'un article du menu"){
 			creerTableUnArticleMenu(articleDuMenu, periodeTemps);
 		}
@@ -49,7 +49,7 @@ public class Statistique {
 			System.out.println("Mauvais choix de type de donnée");
 		}
 	}
-		
+	*/	
 	
 	/**
 	 *  Cas 1 Cherche la quantité par periode choisie d'un articleMenu specifique dans base de donnée
@@ -66,12 +66,12 @@ public class Statistique {
 		
 		switch (periode){
 		case "Journalier":  
-			v = new String[31][2];
+			tableDeDonnee = new String[31][2];
 			
 			// Creons la table journalier
 			int m = 0;
 			
-			while(m<v.length){
+			while(m<tableDeDonnee.length){
 						
 				dateDebut=date_format.format(calendar.getTime());
 				dateFin=date_format.format(calendar.getTime());
@@ -79,8 +79,8 @@ public class Statistique {
 				qtyArticle=archDonnee.getTotalUnArticle(articleMenu,dateDebut,dateFin);
 				
 				
-				v[m][0]=String.valueOf(qtyArticle);
-				v[m][1]=date_format.format(calendar.getTime());
+				tableDeDonnee[m][0]=String.valueOf(qtyArticle);
+				tableDeDonnee[m][1]=date_format.format(calendar.getTime());
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
 				m++;
 				qtyArticle=0;
@@ -90,18 +90,18 @@ public class Statistique {
 			break;
 			
 		default : 
-			v = new String[1][1]; break; 
+			tableDeDonnee = new String[1][1]; break; 
 			
 		
 		case "Hebdomadaire": 
 			 
-			v = new String [52][2];
+			tableDeDonnee = new String [52][2];
 			
 			// Creons la table hebdomadaire
 			m = 0;
 			int semaine=0;
 		
-			while(m<v.length){
+			while(m<tableDeDonnee.length){
 				
 				
 				semaine=calendar.get(Calendar.WEEK_OF_YEAR);
@@ -117,8 +117,8 @@ public class Statistique {
 				qtyArticle=archDonnee.getTotalUnArticle(articleMenu,dateDebut,dateFin);
 				
 				
-				v[m][0]=String.valueOf(qtyArticle);
-				v[m][1]="Semaine du "+date_format.format(calendar.getTime());
+				tableDeDonnee[m][0]=String.valueOf(qtyArticle);
+				tableDeDonnee[m][1]="Semaine du "+date_format.format(calendar.getTime());
 				m++;
 				qtyArticle=0;
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
@@ -127,14 +127,14 @@ public class Statistique {
 			break;
 			
 		case "Mensuelle": 
-		v = new String [13][2]; 
+		tableDeDonnee = new String [13][2]; 
 		
 		
 		// Creons la table mensuelle
 		m = 0;
 		int mois=0; 
 		
-		while(m<v.length){
+		while(m<tableDeDonnee.length){
 			
 			
 			mois=calendar.get(Calendar.MONTH);
@@ -149,8 +149,8 @@ public class Statistique {
 			
 			qtyArticle=archDonnee.getTotalUnArticle(articleMenu,dateDebut,dateFin);
 			
-			v[m][0]=String.valueOf(qtyArticle);
-			v[m][1]=calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA_FRENCH)+" "+String.valueOf(calendar.get(Calendar.YEAR));
+			tableDeDonnee[m][0]=String.valueOf(qtyArticle);
+			tableDeDonnee[m][1]=calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA_FRENCH)+" "+String.valueOf(calendar.get(Calendar.YEAR));
 			
 			m++;
 			qtyArticle=0;
@@ -181,12 +181,12 @@ public class Statistique {
 		
 		switch (periode){
 		case "Journalier":  
-			v = new String[31][2];
+			tableDeDonnee = new String[31][2];
 			
 			// Creons la table journalier
 			int m = 0;
 			
-			while(m<v.length){
+			while(m<tableDeDonnee.length){
 						
 				dateDebut=date_format.format(calendar.getTime());
 				dateFin=date_format.format(calendar.getTime());
@@ -194,8 +194,8 @@ public class Statistique {
 				qtyArticle=archDonnee.getTotalDesArticles(dateDebut,dateFin);
 				
 				
-				v[m][0]=String.valueOf(qtyArticle);
-				v[m][1]=date_format.format(calendar.getTime());
+				tableDeDonnee[m][0]=String.valueOf(qtyArticle);
+				tableDeDonnee[m][1]=date_format.format(calendar.getTime());
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
 				m++;
 				qtyArticle=0;
@@ -205,18 +205,18 @@ public class Statistique {
 			break;
 			
 		default : 
-			v = new String[1][1]; break; 
+			tableDeDonnee = new String[1][1]; break; 
 			
 		
 		case "Hebdomadaire": 
 			 
-			v = new String [52][2];
+			tableDeDonnee = new String [52][2];
 			
 			// Creons la table hebdomadaire
 			m = 0;
 			int semaine=0;
 		
-			while(m<v.length){
+			while(m<tableDeDonnee.length){
 				
 				
 				semaine=calendar.get(Calendar.WEEK_OF_YEAR);
@@ -232,8 +232,8 @@ public class Statistique {
 				qtyArticle=archDonnee.getTotalDesArticles(dateDebut,dateFin);
 				
 				
-				v[m][0]=String.valueOf(qtyArticle);
-				v[m][1]="Semaine du "+date_format.format(calendar.getTime());
+				tableDeDonnee[m][0]=String.valueOf(qtyArticle);
+				tableDeDonnee[m][1]="Semaine du "+date_format.format(calendar.getTime());
 				m++;
 				qtyArticle=0;
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
@@ -242,14 +242,14 @@ public class Statistique {
 			break;
 			
 		case "Mensuelle": 
-		v = new String [13][2]; 
+		tableDeDonnee = new String [13][2]; 
 		
 		
 		// Creons la table mensuelle
 		m = 0;
 		int mois=0; 
 		
-		while(m<v.length){
+		while(m<tableDeDonnee.length){
 			
 			
 			mois=calendar.get(Calendar.MONTH);
@@ -265,8 +265,8 @@ public class Statistique {
 			
 			qtyArticle=archDonnee.getTotalDesArticles(dateDebut,dateFin);
 			
-			v[m][0]=String.valueOf(qtyArticle);
-			v[m][1]=calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA_FRENCH)+" "+String.valueOf(calendar.get(Calendar.YEAR));
+			tableDeDonnee[m][0]=String.valueOf(qtyArticle);
+			tableDeDonnee[m][1]=calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA_FRENCH)+" "+String.valueOf(calendar.get(Calendar.YEAR));
 			
 			m++;
 			qtyArticle=0;
@@ -289,7 +289,7 @@ public class Statistique {
 	 * Cas 3 Chercher la durée des commandes en fonction d'une periode.
 	 */
 	
-	public void creerTablePrepCommande(String periode)throws ClassNotFoundException{
+	public void creerTableDureeCommande(String periode)throws ClassNotFoundException{
 		//Calendar tempsMoy = Calendar.getInstance();
 		int tempsMoy=0;
 		calendar = Calendar.getInstance();
@@ -298,13 +298,13 @@ public class Statistique {
 		
 		switch (periode){
 		case "Journalier":  
-			v = new String[31][2];
+			tableDeDonnee = new String[31][2];
 			
 			// Creons la table journalier
 			int m = 0;
 			
 			
-			while(m<v.length){
+			while(m<tableDeDonnee.length){
 						
 				dateDebut=date_format.format(calendar.getTime());
 				dateFin=date_format.format(calendar.getTime());
@@ -312,12 +312,12 @@ public class Statistique {
 				tempsMoy=archDonnee.DureeCommande(dateDebut,dateFin);
 				
 				if (tempsMoy == 0){
-					v[m][0]="---";
+					tableDeDonnee[m][0]="---";
 				}else{
-					v[m][0]=String.valueOf(tempsMoy);
+					tableDeDonnee[m][0]=String.valueOf(tempsMoy);
 				}
 				
-				v[m][1]=date_format.format(calendar.getTime());
+				tableDeDonnee[m][1]=date_format.format(calendar.getTime());
 				
 				
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
@@ -329,18 +329,18 @@ public class Statistique {
 			break;
 			
 		default : 
-			v = new String[1][1]; break; 
+			tableDeDonnee = new String[1][1]; break; 
 			
 		
 		case "Hebdomadaire": 
 			 
-			v = new String [52][2];
+			tableDeDonnee = new String [52][2];
 			
 			// Creons la table hebdomadaire
 			m = 0;
 			int semaine=0;
 		
-			while(m<v.length){
+			while(m<tableDeDonnee.length){
 				
 				
 				semaine=calendar.get(Calendar.WEEK_OF_YEAR);
@@ -357,11 +357,11 @@ public class Statistique {
 				
 				
 				if (tempsMoy == 0){
-					v[m][0]="---";
+					tableDeDonnee[m][0]="---";
 				}else{
-					v[m][0]=String.valueOf(tempsMoy);
+					tableDeDonnee[m][0]=String.valueOf(tempsMoy);
 				}
-				v[m][1]="Semaine du "+date_format.format(calendar.getTime());
+				tableDeDonnee[m][1]="Semaine du "+date_format.format(calendar.getTime());
 				m++;
 				
 				calendar.add(Calendar.DAY_OF_YEAR, -1);
@@ -370,14 +370,14 @@ public class Statistique {
 			break;
 			
 		case "Mensuelle": 
-		v = new String [13][2]; 
+		tableDeDonnee = new String [13][2]; 
 		
 		
 		// Creons la table hebdomadaire
 		m = 0;
 		int mois=0; 
 		
-		while(m<v.length){
+		while(m<tableDeDonnee.length){
 			
 			
 			mois=calendar.get(Calendar.MONTH);
@@ -394,11 +394,11 @@ public class Statistique {
 			tempsMoy=archDonnee.DureeCommande(dateDebut,dateFin);
 			
 			if (tempsMoy == 0){
-				v[m][0]="---";
+				tableDeDonnee[m][0]="---";
 			}else{
-				v[m][0]=String.valueOf(tempsMoy);
+				tableDeDonnee[m][0]=String.valueOf(tempsMoy);
 			}
-			v[m][1]=calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA_FRENCH)+" "+String.valueOf(calendar.get(Calendar.YEAR));
+			tableDeDonnee[m][1]=calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA_FRENCH)+" "+String.valueOf(calendar.get(Calendar.YEAR));
 			
 			m++;
 			calendar.add(Calendar.DAY_OF_YEAR, -1);
