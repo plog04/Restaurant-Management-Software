@@ -33,9 +33,9 @@ public class InterfCuisinier extends Fenetre implements ActionListener{
 	private JButton bSetAnnuler = new JButton("Annuler");
 	private JButton bSetEnAttente = new JButton("En attente");
 	private JButton bRafraichir = new JButton("Rafraîchir");
-	private InterfCompteEntree monEntree;
+	private InterfDemarrer monEntree;
 	
-	InterfCuisinier(InterfCompteEntree Entree){
+	InterfCuisinier(InterfDemarrer Entree){
 		//super();
 		monEntree = Entree;
 		this.setTitle("Cuisinier");

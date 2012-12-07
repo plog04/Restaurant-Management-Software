@@ -1,0 +1,13 @@
+Andre: Code: LigneCommande, commande, Archive, Restaurant, Base de donnee.
+
+
+
+Jean-Philippe: Code: Interface serveur, interface cuisinier, commande et ligneCOmmande et restaurant.  
+
+
+
+Guillaume: Code: Archive, Statistique, Interface Statistique et interface entree. Github (outil de gestion)
+
+
+
+DaGia: 

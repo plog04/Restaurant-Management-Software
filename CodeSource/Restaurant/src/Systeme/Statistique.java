@@ -11,10 +11,13 @@ public class Statistique {
 	Archive archDonnee;
 	SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
 	SimpleDateFormat time_format = new SimpleDateFormat("HH:mm");
-	public Statistique(){
+	
+	
+	// Constructeur
+	public Statistique(Archive mesArchives){
 		calendar = Calendar.getInstance();
 	
-		archDonnee= new Archive();
+		archDonnee= mesArchives;
 	}
 	
 	

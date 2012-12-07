@@ -15,13 +15,13 @@ import java.util.Date;
 
 public class Archive {
 	
-	
+/*	
 	private static int code;
 	private static String nom;
 	private static String typeMenu;
 	private static String description;
 	private static double prix;
-	
+	*/
 	 Connection connection;  
 	 ResultSet rs; 
 	 Statement statement; 
@@ -83,13 +83,17 @@ public class Archive {
 			rs = statement.executeQuery("SELECT count(*) as Nbre FROM menu WHERE "+colonne+" == \""+valeurEle+"\"");
 			valeur=rs.getInt("Nbre");
 			
-			closeConnection();	
+				
 		}
 		catch(Exception e)
 		{
 			
 			System.err.println(e);
 		}
+		finally
+	    {  	
+	    	closeConnection();
+	    }
 			return(valeur);
 		
 		}
@@ -115,19 +119,23 @@ public class Archive {
 			    count++;
 			}
 			
-			closeConnection();	
+				
 		}
 		catch(Exception e)
 		{
 			article=new String[1];
 			System.err.println("erroor"+e);
 		}
+		finally
+	    {  	
+	    	closeConnection();
+	    }
 			return(article);
 		
 		}
 	
 	public int AddTableData(String articleAuMenu, String date1, String date2) throws ClassNotFoundException{
-		ArrayList<String> valeur = new ArrayList<String>();
+		//ArrayList<String> valeur = new ArrayList<String>();
 		int total=0;
 		try{
 			openConnection();
@@ -149,13 +157,17 @@ public class Archive {
 			*/
 			
 			
-			closeConnection();	
+			
 		}
 		catch(Exception e)
 		{
 			
 			System.err.println("erroor"+e);
 		}
+		finally
+	    {  	
+	    	closeConnection();
+	    }
 			return(total);
 		
 		}
@@ -188,13 +200,17 @@ public class Archive {
 				
 				
 				
-				closeConnection();	
+					
 			}
 			catch(Exception e)
 			{
 				
 				System.err.println("erroor"+e);
 			}
+			finally
+		    {  	
+		    	closeConnection();
+		    }
 				return(total);
 			
 			}
@@ -225,13 +241,20 @@ public class Archive {
 			
 			
 			
-			closeConnection();	
+			
 		}
 		catch(Exception e)
 		{
 			
 			System.err.println("erroor"+e);
 		}
+		finally
+	    {  	
+	    	closeConnection();
+	    }
+		
+		
+		
 			return(total);
 		
 		}
@@ -292,30 +315,42 @@ public class Archive {
 				}
 				
 				
-				closeConnection();	
+					
 			}
 			catch(Exception e)
 			{
 				
 				System.err.println("erroor"+e);
 			}
-				return(cal3/(1000*60));
+			finally
+		    {
+		    	
+		    	closeConnection();
 			
+				
+		    }
+			return(cal3/(1000*60));
 			}
 	
 
 		
-		public static ArrayList<Object> getDescPrix(int code) throws ClassNotFoundException
+		public ArrayList<Object> getDescPrix(int code) throws ClassNotFoundException
 		  {
 			// load the sqlite-JDBC driver using the current class loader
-		    Class.forName("org.sqlite.JDBC");
+		   /*
+			Class.forName("org.sqlite.JDBC");
 		    Connection connection = null;
+		    */
 		    try
 		    {
 		      // create a database connection
+		    	
+		    	openConnection();
+		    	/*
 		      connection = DriverManager.getConnection("jdbc:sqlite:dbRestaurant.sqlite");
 		      Statement statement = connection.createStatement();
 		      statement.setQueryTimeout(30);  // set timeout to 30 sec.
+		      */
 		      ResultSet rs = statement.executeQuery("SELECT * FROM menu WHERE code =" +code+"");
 		      
 		      ArrayList<Object> DescPrix = new ArrayList<Object>();
@@ -331,13 +366,20 @@ public class Archive {
 		    }
 		    catch(SQLException e)
 		    {
+		    	
+		    	
+		    	
 		      // if the error message is "out of memory", 
 		      // it probably means no database file is found
 		      System.err.println(e.getMessage());
 		    }
+		    
 		    finally
 		    {
-		      try
+		    	
+		    	closeConnection();
+		     /*
+		    try
 		      {
 		        if(connection != null)
 		          connection.close();
@@ -347,11 +389,12 @@ public class Archive {
 		        // connection close failed.
 		        System.err.println(e);
 		      }
+		      */
 		    }
 		    
 		    return null;
 		  }
-	
+}
 	/*
 	public static void getDescPrix(int code) throws ClassNotFoundException
   {
@@ -398,7 +441,7 @@ public class Archive {
   }
 	*/
 	
-	
+	/*
 	public static void selectArticle(int code){
 		try {
 			Menu.getDescPrix(code); //appeler cette methode pour avoir prix, nom, description, etc correspondant
@@ -428,3 +471,4 @@ public class Archive {
 	}
 	
 }
+*/

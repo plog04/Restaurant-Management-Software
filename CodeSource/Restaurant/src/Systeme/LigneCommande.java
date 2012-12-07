@@ -10,12 +10,12 @@ public class LigneCommande {
 	private  double sousTotal;
 	private  int quantite;
 	private String etat;
-	
+	Archive monArchive;
 	public LigneCommande(int code, int quantity){
 		
 		ArrayList<Object> descPrix = new  ArrayList<Object>();
 		try {
-			descPrix = Archive.getDescPrix(code);
+			descPrix = monArchive.getDescPrix(code);
 			quantite = quantity;
 		prix = (Double) descPrix.get(1);	
 		sousTotal = prix * quantite;

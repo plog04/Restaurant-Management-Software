@@ -24,7 +24,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 	private JPanel pListeCommandes = new JPanel();
 	private JPanel pAjouterCommande = new JPanel();
 	private JButton bAjouterCommande = new JButton("Ajouter commande");
-	private InterfCompteEntree monEntree;
+	private InterfDemarrer monEntree;
 	
 
 	private String[][] ligneCommandeActives = new String[30][4];
@@ -39,7 +39,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 	private JButton bNotifier = new JButton("Notifier");
 	private JButton bPayerCommande = new JButton("Payer la commande");
 	
-	InterfServeur(InterfCompteEntree Entree){
+	InterfServeur(InterfDemarrer Entree){
 		//super();
 		//{"Description1","Quantité1","Sous-Total1","État1","Description2","Quantité2","Sous-Total2","État2"}
 		//{"Description","Quantité","Sous-Total","État"}
@@ -60,6 +60,8 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		tCommande.getModel().addTableModelListener(tCommande);
 		//tCommande.addColumn(new TableColumn());
 		*/
+		InterfDemarrer monEntree;
+		//monEntree.monArchive.
 		monEntree = Entree;
 		this.setTitle("Serveur");
 		//cFenetre.setLayout(new BorderLayout());
@@ -150,7 +152,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 			
 			int code = 101;
 			int quantite = 1;
-			commandeActive.creerLigneCommande(code, quantite);
+			commandeActive.creerLigneCommande(code, quantite, monEntree.monArchive);
 			System.out.println(commandeActive.creerTableLigneCommande().length);
 		}
 	}

@@ -17,11 +17,11 @@ public class InterfStatistique extends Fenetre implements ActionListener{
 		/**
 		 * 
 		 */
-		Statistique Stats = new Statistique();
+		Statistique Stats;// = new Statistique();
 		//Statistique Stats;
 		private static final long serialVersionUID = 1L;
 		
-		InterfCompteEntree monEntree;
+		InterfDemarrer monEntree;
 		private JPanel pCommandes = new JPanel();
 		
 		private JComboBox<String> cbListeTable;
@@ -52,11 +52,12 @@ public class InterfStatistique extends Fenetre implements ActionListener{
 		
 
 		
-		Archive mesArchives;
+		//Archive mesArchives;
 		
 		
-		public InterfStatistique(InterfCompteEntree Entree) {
+		public InterfStatistique(InterfDemarrer Entree, Archive mesArchives) {
 			monEntree= Entree;
+			Stats = new Statistique(mesArchives);
 			//super();
 			//Stats=monStats;
 			mesArchives = Stats.archDonnee;

@@ -8,22 +8,22 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class InterfCompteEntree extends Fenetre implements ActionListener{
+public class InterfDemarrer extends Fenetre implements ActionListener{
 	
 	/**
 	 * 
 	 */
-	//public Archive monArchive = new Archive();
+	public Archive monArchive = new Archive();
 	 
 	
 	InterfServeur fServeur = new InterfServeur(this);
 	InterfCuisinier fCuisinier = new InterfCuisinier(this);	
-	//InterfStatistique fGestionnaire = new InterfStatistique(this);
+	InterfStatistique fGestionnaire = new InterfStatistique(this,monArchive);
 	
 	private JButton bServeur = new JButton("Serveur");
 	private JButton bCuisinier = new JButton("Cuisinier");
 	private JButton bGestionnaire = new JButton("Gestionnaire");
-	private JButton bAdministrateur = new JButton("Administrateur");
+	//private JButton bAdministrateur = new JButton("Administrateur");
 	
 
 	
@@ -34,11 +34,11 @@ public class InterfCompteEntree extends Fenetre implements ActionListener{
 	JPanel ptitre = new JPanel();
 	
 	
-	public InterfCompteEntree(){
+	public InterfDemarrer(){
 		super();
 		fServeur.setVisible(false);
 		fCuisinier.setVisible(false);
-		//fGestionnaire.setVisible(false);
+		fGestionnaire.setVisible(false);
 		
 		
 		this.setTitle("Compte d'entrée");
@@ -54,12 +54,12 @@ public class InterfCompteEntree extends Fenetre implements ActionListener{
 		pCompteEntree.add(bServeur);
 		pCompteEntree.add(bCuisinier);
 		pCompteEntree.add(bGestionnaire);
-		pCompteEntree.add(bAdministrateur);
+		//pCompteEntree.add(bAdministrateur);
 		
 		bServeur.addActionListener(this);
 		bCuisinier.addActionListener(this);
 		bGestionnaire.addActionListener(this);
-		bAdministrateur.addActionListener(this);
+		//bAdministrateur.addActionListener(this);
 		
 		this.setVisible(true);
 	}
@@ -83,15 +83,16 @@ public class InterfCompteEntree extends Fenetre implements ActionListener{
 		}
 		if (source==bGestionnaire){
 			this.setVisible(false);
-			//fGestionnaire.pRetour.setVisible(true);
-			//fGestionnaire.setVisible(true);
+			fGestionnaire.pRetour.setVisible(true);
+			fGestionnaire.setVisible(true);
 			
 			
 		}
+		/*
 		if (source==bAdministrateur){
 		//	fAdministrateur.setVisible(true);
 		}
-		
+		*/
 	
 	}
 

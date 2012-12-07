@@ -16,7 +16,7 @@ public class Main {
 		
 		//System.out.println(monArchive.countElement("menu", "typeMenu", "Boisson"));
 		//System.out.println(monArchive.countElement("menu", "typeMenu", "Boisson", ));
-		int nbreArticle=0;
+	//	int nbreArticle=0;
 	//ArrayList<String> ListeCommande = new ArrayList<String>();	
 	/*
 		nbreArticle = monArchive.ElementPeriod("2012-10-28","2012-11-03"); //marche bien!!
@@ -24,7 +24,7 @@ public class Main {
 		*/
 	//SELECT count(*) FROM tableCommande WHERE dateCreation >= '2012-11-17'  AND dateCreation <'2012-11-30'
 		///InterfCuisinier test1 = new InterfCuisinier();
-		InterfCompteEntree compteEntree = new InterfCompteEntree();
+		InterfDemarrer compteEntree = new InterfDemarrer();
 		/*
 		Statistique Stat = new Statistique();
 		Stat.creerTableToutArticleMenu("Journalier");
