@@ -43,7 +43,7 @@ public class Restaurant {
 			return copieRestaurant;
 		}
 		
-
+/*
 		public static void main (String Arg[]){
 			
 			creerCommande("table1");
@@ -76,5 +76,5 @@ public class Restaurant {
 				System.out.println(listeCommande.get(0).listeLigneCommande.get(i).toString());
 			}
 
-}
+}*/
 }

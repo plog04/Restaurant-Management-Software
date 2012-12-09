@@ -20,10 +20,12 @@ public class InterfServeur extends Fenetre implements ActionListener{
 	
 	private JComboBox<String> cbListeTable;
 	private JComboBox<Commande> cbListeCommande;
+	private JComboBox<String> cbListeMenu;
 	private JPanel pListeTables = new JPanel();
 	private JPanel pListeCommandes = new JPanel();
 	private JPanel pAjouterCommande = new JPanel();
 	private JButton bAjouterCommande = new JButton("Ajouter commande");
+	
 	private InterfDemarrer monEntree;
 	
 
@@ -34,37 +36,32 @@ public class InterfServeur extends Fenetre implements ActionListener{
 	private JScrollPane spCommande = new JScrollPane(tCommande);
 	
 	private JPanel pBoutons = new JPanel();
+	private JLabel lQuantite = new JLabel("Quantité:");
+	private JTextField tQuantite = new JTextField();
 	private JButton bAjouterItem = new JButton("Ajouter item");
 	private JButton bRetirerItem = new JButton("Retirer item");
 	private JButton bNotifier = new JButton("Notifier");
 	private JButton bPayerCommande = new JButton("Payer la commande");
-	
+	private Archive monArchive;
+	JFrame frame = new JFrame();
 	InterfServeur(InterfDemarrer Entree){
-		//super();
-		//{"Description1","Quantité1","Sous-Total1","État1","Description2","Quantité2","Sous-Total2","État2"}
-		//{"Description","Quantité","Sous-Total","État"}
-		/*
-		colonnesTableau.add("Description");
-		colonnesTableau.add("Quantité");
-		colonnesTableau.add("Sous-Total");
-		colonnesTableau.add("État");
 		
-		ligneCommandeActives.add("Description1");
-		ligneCommandeActives.add("Quantité1");
-		ligneCommandeActives.add("Sous-Total1");
-		ligneCommandeActives.add("État1");
-		ligneCommandeActives.add("Description2");
-		ligneCommandeActives.add("Quantité2");
-		ligneCommandeActives.add("Sous-Total2");
-		ligneCommandeActives.add("État2");
-		tCommande.getModel().addTableModelListener(tCommande);
-		//tCommande.addColumn(new TableColumn());
-		*/
 		InterfDemarrer monEntree;
-		//monEntree.monArchive.
+		
 		monEntree = Entree;
+		
+		monArchive = monEntree.monArchive;
+		
+		/*final JOptionPane optionPane = new JOptionPane(
+			    "The only way to close this dialog is by\n"
+			    + "pressing one of the following buttons.\n"
+			    + "Do you understand?",
+			    JOptionPane.QUESTION_MESSAGE,
+			    JOptionPane.YES_NO_OPTION);*/
+		
+		
+		
 		this.setTitle("Serveur");
-		//cFenetre.setLayout(new BorderLayout());
 		cFenetre.add(pCommandes, BorderLayout.WEST);
 		
 		cbListeTable = new JComboBox<String>(Restaurant.getListeTable());
@@ -72,7 +69,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		cbListeCommande = new JComboBox<Commande>();
 		cbListeCommande.setSize(new Dimension(100,100));
 		
-		pCommandes.setLayout(new GridLayout(3, 1));
+		pCommandes.setLayout(new GridLayout(4, 1));
 		
 		pCommandes.add(pListeTables);
 		pListeTables.setLayout(new FlowLayout());
@@ -82,9 +79,24 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		pListeCommandes.setLayout(new FlowLayout());
 		pListeCommandes.add(cbListeCommande);
 		
+		try {
+			cbListeMenu = new JComboBox<String>(monArchive.getArticleMenuList());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cbListeMenu.setSize(new Dimension(100,100));
+		pCommandes.add(cbListeMenu);
+		
 		pCommandes.add(pAjouterCommande);
-		pAjouterCommande.setLayout(new BorderLayout());
-		pAjouterCommande.add(bAjouterCommande, BorderLayout.SOUTH);
+		
+		
+		
+		pAjouterCommande.setLayout(new GridLayout(3,1));
+		
+		pAjouterCommande.add(lQuantite);
+		pAjouterCommande.add(tQuantite);
+		pAjouterCommande.add(bAjouterCommande);
 		
 		cFenetre.add(spCommande, BorderLayout.CENTER);
 		pRetour.add(pBoutons, BorderLayout.NORTH);
@@ -99,6 +111,10 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		bAjouterCommande.addActionListener(this);
 		cbListeCommande.addActionListener(this);
 		bAjouterItem.addActionListener(this);
+		
+		bRetirerItem.addActionListener(this);
+		bNotifier.addActionListener(this);
+		bPayerCommande.addActionListener(this);
 		//this.setVisible(true);
 	}
 	
@@ -147,13 +163,29 @@ public class InterfServeur extends Fenetre implements ActionListener{
 			tCommande.repaint();
 			
 		}else if(source==bAjouterItem){
-			Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+			
+			
+			/*Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
 			System.out.println(commandeActive.toString());
 			
 			int code = 101;
 			int quantite = 1;
 			commandeActive.creerLigneCommande(code, quantite, monEntree.monArchive);
-			System.out.println(commandeActive.creerTableLigneCommande().length);
+			System.out.println(commandeActive.creerTableLigneCommande().length);*/
+		}else if(source==bPayerCommande){
+			Object[] options = {"OK",
+                    "Annuler",
+                    };
+int n = JOptionPane.showOptionDialog(frame,
+    "Le total de la commande est de "
+    + 10,
+    "Payer",
+    JOptionPane.YES_NO_CANCEL_OPTION,
+    JOptionPane.QUESTION_MESSAGE,
+    null,
+    options,
+    options[1]);
+			
 		}
 	}
 }

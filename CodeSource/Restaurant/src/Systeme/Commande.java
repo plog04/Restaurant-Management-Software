@@ -19,8 +19,8 @@ public class Commande {
 		identifiant = id;
 	}
 	
-	public void creerLigneCommande(int code, int quantite){
-		LigneCommande lignec = new LigneCommande(code, quantite);
+	public void creerLigneCommande(int code, int quantite, Archive monArchive){
+		LigneCommande lignec = new LigneCommande(code, quantite, monArchive);
 		if(lignec.getDescrip() != null){
 		listeLigneCommande.add(lignec);
 		total = total + lignec.getSousTotal();

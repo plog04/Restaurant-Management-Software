@@ -10,8 +10,8 @@ public class LigneCommande {
 	private  double sousTotal;
 	private  int quantite;
 	private String etat;
-	Archive monArchive;
-	public LigneCommande(int code, int quantity){
+	
+	public LigneCommande(int code, int quantity, Archive monArchive){
 		
 		ArrayList<Object> descPrix = new  ArrayList<Object>();
 		try {
