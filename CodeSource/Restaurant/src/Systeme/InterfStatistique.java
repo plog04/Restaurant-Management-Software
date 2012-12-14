@@ -69,8 +69,8 @@ public class InterfStatistique extends Fenetre implements ActionListener{
 			
 			for (int i =0;i<tableResultat.length;i++){
 				
-					tableResultat[i][0]= "jour"+i;
-					tableResultat[i][1]= String.valueOf(i);
+					tableResultat[i][0]= "";
+					tableResultat[i][1]= "";
 				
 			}
 			
@@ -155,8 +155,9 @@ public class InterfStatistique extends Fenetre implements ActionListener{
 				Object selected2= cbListeCommande.getSelectedItem();
 				if (selected2!="Periode"){
 				try{
-					switch (String.valueOf(selected1)){
-						case "Popularité d'un article du menu":
+					if(String.valueOf(selected1)=="Popularité d'un article du menu"){
+					//switch (String.valueOf(selected1)){
+						//case "Popularité d'un article du menu":
 					
 					tableau.getColumnModel().getColumn(0).setHeaderValue("Quantite");
 					tableau.getColumnModel().getColumn(1).setHeaderValue("Periode");
@@ -164,22 +165,28 @@ public class InterfStatistique extends Fenetre implements ActionListener{
 					Stats.creerTableUnArticleMenu(String.valueOf(cbListeMenu.getSelectedItem()), String.valueOf(selected2));
 					//Stats.setTableauUnArticle(String.valueOf(selected1), String.valueOf(selected2), String.valueOf(cbListeMenu.getSelectedItem()));
 					setDonneeDansTable(Stats.getTableau());
-					break;
-							case "Popularité du menu":
+					//break;
+					}
+					else if(String.valueOf(selected1)=="Popularité du menu"){
+					//		case "Popularité du menu":
 					tableau.getColumnModel().getColumn(0).setHeaderValue("Quantite");
 					tableau.getColumnModel().getColumn(1).setHeaderValue("Periode");
 					Stats.creerTableToutArticleMenu(String.valueOf(selected2));
 					//Stats.setTableauToutArticle(String.valueOf(selected1), String.valueOf(selected2));
 					setDonneeDansTable(Stats.getTableau());
-					break;
-							case "Temps moyen par client":
+					}
+					//break;
+					else if(String.valueOf(selected1)=="Temps moyen par client"){
+							//case "Temps moyen par client":
 					tableau.getColumnModel().getColumn(0).setHeaderValue("Durée moyenne (min)");
 					tableau.getColumnModel().getColumn(1).setHeaderValue("Periode");
 					Stats.creerTableDureeCommande(String.valueOf(selected2));
 					//Stats.setTableauToutArticle(String.valueOf(selected1), String.valueOf(selected2));
 					setDonneeDansTable(Stats.getTableau());
-					break;	
-							default: break;
+					//break;
+					}
+					else{
+						System.out.println("Cette selection n'ai pas reconnu");						//default: break;
 					}
 				}
 				
