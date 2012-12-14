@@ -46,7 +46,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 	JFrame frame = new JFrame();
 	InterfServeur(InterfDemarrer Entree){
 		
-		InterfDemarrer monEntree;
+		
 		
 		monEntree = Entree;
 		
@@ -121,7 +121,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 		Object source = e.getSource();
 		if (source==bRetour){
-
+			
 			this.setVisible(false);
 			monEntree.setVisible(true);
 			

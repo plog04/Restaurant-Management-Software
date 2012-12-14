@@ -26,30 +26,7 @@ public class Statistique {
 	public String[][] getTableau (){
 		return(tableDeDonnee);
 	}
-	/*
-	public void setTableauTout1Article(String axeDesY, String periodeTemps)throws ClassNotFoundException{
-		if (axeDesY == "Popularité du menu"){
-			creerTableToutArticleMenu(periodeTemps);
-		}
-		else if (axeDesY == "Temps moyen par client") {
-			creerTableDureeCommande(periodeTemps);
-			}
-			else{
-				System.out.println("Mauvais choix de type de donnée");
-			}
-				
-		
-	}
 	
-	public void setTableauUnArticle(String axeDesY, String periodeTemps, String articleDuMenu)throws ClassNotFoundException{
-		if (axeDesY == "Popularité d'un article du menu"){
-			creerTableUnArticleMenu(articleDuMenu, periodeTemps);
-		}
-		else{
-			System.out.println("Mauvais choix de type de donnée");
-		}
-	}
-	*/	
 	
 	/**
 	 *  Cas 1 Cherche la quantité par periode choisie d'un articleMenu specifique dans base de donnée
