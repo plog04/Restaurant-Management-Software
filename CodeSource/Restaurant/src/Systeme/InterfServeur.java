@@ -141,6 +141,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 					options,
 					options[1]);
 			if(n==0){
+				commandeActive.setHeureFin();
 				if(monArchive.createNewCommande(commandeActive)){
 					Restaurant.supprimerCommande(commandeActive);
 					afficherCommandes();
