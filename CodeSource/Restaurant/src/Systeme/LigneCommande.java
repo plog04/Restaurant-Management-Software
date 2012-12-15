@@ -11,11 +11,13 @@ public class LigneCommande {
 	private  int quantite;
 	private String etat;
 	private Commande parent;
+	private int code;
 	
 	public LigneCommande(int code, int quantity, Archive monArchive, Commande parent){
 		
 		ArrayList<Object> descPrix = new  ArrayList<Object>();
 		try {
+			this.code = code;
 			this.parent = parent;
 			etat = "En attente";
 			descPrix = monArchive.getDescPrix(code);
@@ -35,7 +37,9 @@ public class LigneCommande {
 		try {
 			this.parent = parent;
 			etat = "Non notifié";
-			prix = monArchive.getDescPrix(description);
+			ArrayList<Object> descPrix = monArchive.getDescPrix(description);
+			code = (int) descPrix.get(0);
+			prix = (Double) descPrix.get(1);	
 			quantite = quantity;	
 		sousTotal = prix * quantite;
 		this.description = description;
@@ -72,6 +76,10 @@ public class LigneCommande {
 	
 	public Commande getParent(){
 		return parent;
+	}
+	
+	public int getCode(){
+		return code;
 	}
 	public String toString(){
 		return description;

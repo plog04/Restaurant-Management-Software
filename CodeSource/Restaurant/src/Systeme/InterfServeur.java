@@ -105,7 +105,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 			}
 			i++;
 		}
-		//Mets le reste à blan
+		//Mets le reste à blanc
 		while (i<(ligneCommandeActives.length)){
 			for (int j=0; j<4; j++){
 				ligneCommandeActives[i][j] = "";
@@ -114,7 +114,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		}
 		tCommande.repaint();
 		}catch(Exception e){
-			System.out.println("Erreur lors de l'affichage");
+			System.out.println("Erreur lors de l'affichage de la ligne de commande");
 		}
 	}
 	
@@ -141,10 +141,23 @@ public class InterfServeur extends Fenetre implements ActionListener{
 					options,
 					options[1]);
 			if(n==0){
-				monArchive.createNewCommande(commandeActive);
+				if(monArchive.createNewCommande(commandeActive)){
+					Restaurant.supprimerCommande(commandeActive);
+					afficherCommandes();
+				}
+				
 			}
 		}catch(Exception e2){
 			System.out.println("Erreur lors de l'envoi");
+		}
+	}
+	
+	private void afficherCommandes(){
+		ArrayList<Commande> listeCommande = new ArrayList<Commande>();
+		listeCommande = Restaurant.getListeCommandePourTable(cbListeTable.getSelectedItem().toString());
+		cbListeCommande.removeAllItems();
+		for(int i=0; i < listeCommande.size(); i++){
+			cbListeCommande.addItem(listeCommande.get(i));
 		}
 	}
 	
@@ -160,15 +173,17 @@ public class InterfServeur extends Fenetre implements ActionListener{
 				
 				this.setVisible(false);
 				monEntree.setVisible(true);
-			
+				
+			//Affiche les lignes de commandes de la commande sélectionnée
+			}else if(source==cbListeCommande){
+				//Affiche uniquement s'il y a des commandes. Contre un bug lors du changement de table.
+				if(Restaurant.getListeCommandePourTable(cbListeTable.getSelectedItem().toString()).size() > 0){
+				Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+				afficherLignesCommande(commandeActive);
+				}
 			//Affiche les commandes actives pour la table sélectinonée
 			}else if(source==cbListeTable){
-				ArrayList<Commande> listeCommande = new ArrayList<Commande>();
-				listeCommande = Restaurant.getListeCommandePourTable(cbListeTable.getSelectedItem().toString());
-				cbListeCommande.removeAllItems();
-				for(int i=0; i < listeCommande.size(); i++){
-					cbListeCommande.addItem(listeCommande.get(i));
-				}
+				afficherCommandes();
 				
 			//Ajoute une commande à la table sélectionnée
 			}else if(source==bAjouterCommande){
@@ -176,11 +191,6 @@ public class InterfServeur extends Fenetre implements ActionListener{
 				ArrayList<Commande> listeCommande = new ArrayList<Commande>();
 				listeCommande = Restaurant.getListeCommandePourTable(cbListeTable.getSelectedItem().toString());
 				cbListeCommande.addItem(listeCommande.get(listeCommande.size()-1));
-			
-			//Affiche les lignes de commandes de la commande sélectionnée
-			}else if(source==cbListeCommande){
-				Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
-				afficherLignesCommande(commandeActive);
 	
 			//Ajoute un item du menu à la commande sélectionnée
 			}else if(source==bAjouterItem){
@@ -190,7 +200,9 @@ public class InterfServeur extends Fenetre implements ActionListener{
 				}catch(NumberFormatException q){
 					quantite = 1;
 				}
-				ajouterItem((Commande) cbListeCommande.getSelectedItem(), (String) cbListeMenu.getSelectedItem(),quantite);
+				Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+				ajouterItem(commandeActive, (String) cbListeMenu.getSelectedItem(),quantite);
+				afficherLignesCommande(commandeActive);
 				
 			}else if(source==bPayerCommande){
 				payerCommande((Commande) cbListeCommande.getSelectedItem());

@@ -15,13 +15,6 @@ import java.util.Date;
 
 public class Archive {
 	
-/*	
-	private static int code;
-	private static String nom;
-	private static String typeMenu;
-	private static String description;
-	private static double prix;
-	*/
 	 Connection connection;  
 	 ResultSet rs; 
 	 Statement statement; 
@@ -140,23 +133,7 @@ public class Archive {
 		try{
 			openConnection();
 			
-			rs = statement.executeQuery("SELECT * FROM tableCommande WHERE dateCreation >= \""+date1+"\" AND dateCreation  <= \""+date2+"\"" );
-			/*
-			while(rs.next()) {
-
-				valeur.add(rs.getString ("numeroCommande"));
-			
-			    
-			}
-			
-			for (int i=0;i<valeur.size();i++){
-				rs = statement.executeQuery("SELECT sum(\"quantite\") FROM ligneCommande WHERE numeroCommande = "+valeur.get(i)+" AND codeMenu IN (SELECT code FROM menu WHERE nom = \""+articleAuMenu+"\")");
-				
-				total=total+rs.getInt(1);
-			}
-			*/
-			
-			
+			rs = statement.executeQuery("SELECT * FROM tableCommande WHERE dateCreation >= \""+date1+"\" AND dateCreation  <= \""+date2+"\"" );		
 			
 		}
 		catch(Exception e)
@@ -337,20 +314,11 @@ public class Archive {
 		public ArrayList<Object> getDescPrix(int code) throws ClassNotFoundException
 		  {
 			// load the sqlite-JDBC driver using the current class loader
-		   /*
-			Class.forName("org.sqlite.JDBC");
-		    Connection connection = null;
-		    */
 		    try
 		    {
 		      // create a database connection
 		    	
 		    	openConnection();
-		    	/*
-		      connection = DriverManager.getConnection("jdbc:sqlite:dbRestaurant.sqlite");
-		      Statement statement = connection.createStatement();
-		      statement.setQueryTimeout(30);  // set timeout to 30 sec.
-		      */
 		      ResultSet rs = statement.executeQuery("SELECT * FROM menu WHERE code =" +code+"");
 		      
 		      ArrayList<Object> DescPrix = new ArrayList<Object>();
@@ -375,54 +343,31 @@ public class Archive {
 		    }
 		    
 		    finally
-		    {
-		    	
+		    {   	
 		    	closeConnection();
-		     /*
-		    try
-		      {
-		        if(connection != null)
-		          connection.close();
-		      }
-		      catch(SQLException e)
-		      {
-		        // connection close failed.
-		        System.err.println(e);
-		      }
-		      */
 		    }
 		    
 		    return null;
 		  }
-		public double getDescPrix(String nom) throws ClassNotFoundException
+		public ArrayList<Object> getDescPrix(String nom) throws ClassNotFoundException
 		  {
 			// load the sqlite-JDBC driver using the current class loader
-		   /*
-			Class.forName("org.sqlite.JDBC");
-		    Connection connection = null;
-		    */
 		    try
 		    {
 		      // create a database connection
 		    	double prix = 0;
 		    	openConnection();
-		    	/*
-		      connection = DriverManager.getConnection("jdbc:sqlite:dbRestaurant.sqlite");
-		      Statement statement = connection.createStatement();
-		      statement.setQueryTimeout(30);  // set timeout to 30 sec.
-		      */
 		      ResultSet rs = statement.executeQuery("SELECT * FROM menu WHERE nom =\"" +nom+"\"");
-		      
 		      ArrayList<Object> DescPrix = new ArrayList<Object>();
 		      while(rs.next())
 		      {
 		        // read the result set
 		    	 
-		    	 
-		    	  prix = rs.getDouble("prix");
+		    	  DescPrix.add(rs.getInt("code"));
+		    	  DescPrix.add(rs.getDouble("prix"));
 		    	 
 		      }
-		      return prix;
+		      return DescPrix;
 		    }
 		    catch(SQLException e)
 		    {
@@ -436,23 +381,10 @@ public class Archive {
 		    
 		    finally
 		    {
-		    	
 		    	closeConnection();
-		     /*
-		    try
-		      {
-		        if(connection != null)
-		          connection.close();
-		      }
-		      catch(SQLException e)
-		      {
-		        // connection close failed.
-		        System.err.println(e);
-		      }
-		      */
 		    }
 		    
-		    return 0;
+		    return null;
 		  }
 
 
@@ -495,9 +427,12 @@ public boolean createNewCommande(Commande commande) throws ClassNotFoundExceptio
 	try{
 	  	openConnection();
 	  	Date date = new Date();
-	  	 statement.executeUpdate("INSERT INTO tableCommande VALUES ("
-	  			+commande.getId()+","+commande.getId()+",0,"+commande.getTotal()+",'"+commande.getDate()+"','"+date+"','"+date+ "')");
-	    
+	  	 statement.executeUpdate("INSERT INTO tableCommande (numeroCommande,nomServeur,prixTotal,heureDebut,heureFin,dateCreation)VALUES ("
+	  			+commande.getId()+",0,"+commande.getTotal()+",'"+commande.getDate()+"','"+date+"','"+date+ "')");
+	  	ArrayList<LigneCommande> listeLigneCommande = commande.getListeLigneCommande();
+	  	 for(int i = 0; i<listeLigneCommande.size();i++){
+	  		statement.executeUpdate("INSERT INTO ligneCommande (numeroCommande,codeMenu,quantite) VALUES ("+commande.getId()+","+listeLigneCommande.get(i).getCode()+","+listeLigneCommande.get(i).getQuantite()+")");
+	  	 }
     	return true;
   	}catch(SQLException e){
   	

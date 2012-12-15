@@ -59,5 +59,9 @@ public class Restaurant {
 		}
 		return tableauLigneCommande;
 	}
+	
+	public static void supprimerCommande(Commande commandeSupp){
+		listeCommande.remove(commandeSupp);
+	}
 
 }
