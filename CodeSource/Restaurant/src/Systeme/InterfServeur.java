@@ -3,11 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Vector;
-
 import javax.swing.*;
-import javax.swing.table.TableColumn;
 
 
 public class InterfServeur extends Fenetre implements ActionListener{
@@ -47,20 +43,8 @@ public class InterfServeur extends Fenetre implements ActionListener{
 	JFrame frame = new JFrame();
 	InterfServeur(InterfDemarrer Entree){
 		
-		
-		
 		monEntree = Entree;
-		
 		monArchive = monEntree.monArchive;
-		
-		/*final JOptionPane optionPane = new JOptionPane(
-			    "The only way to close this dialog is by\n"
-			    + "pressing one of the following buttons.\n"
-			    + "Do you understand?",
-			    JOptionPane.QUESTION_MESSAGE,
-			    JOptionPane.YES_NO_OPTION);*/
-		
-		
 		
 		this.setTitle("Serveur");
 		cFenetre.add(pCommandes, BorderLayout.WEST);
@@ -69,13 +53,11 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		cbListeTable.setSize(new Dimension(100,100));
 		cbListeCommande = new JComboBox();
 		cbListeCommande.setSize(new Dimension(100,100));
-		
+	
 		pCommandes.setLayout(new GridLayout(4, 1));
-		
 		pCommandes.add(pListeTables);
 		pListeTables.setLayout(new FlowLayout());
 		pListeTables.add(cbListeTable);
-		
 		pCommandes.add(pListeCommandes);
 		pListeCommandes.setLayout(new FlowLayout());
 		pListeCommandes.add(cbListeCommande);
@@ -88,20 +70,13 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		}
 		cbListeMenu.setSize(new Dimension(100,100));
 		pCommandes.add(cbListeMenu);
-		
 		pCommandes.add(pAjouterCommande);
-		
-		
-		
 		pAjouterCommande.setLayout(new GridLayout(3,1));
-		
 		pAjouterCommande.add(lQuantite);
 		pAjouterCommande.add(tQuantite);
 		pAjouterCommande.add(bAjouterCommande);
-		
 		cFenetre.add(spCommande, BorderLayout.CENTER);
 		pRetour.add(pBoutons, BorderLayout.NORTH);
-		
 		pBoutons.setLayout(new GridLayout(1,4));
 		pBoutons.add(bAjouterItem);
 		pBoutons.add(bRetirerItem);
@@ -114,17 +89,15 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		bRafraichir.addActionListener(this);
 		cbListeCommande.addActionListener(this);
 		bAjouterItem.addActionListener(this);
-		
 		bRetirerItem.addActionListener(this);
 		bNotifier.addActionListener(this);
 		bPayerCommande.addActionListener(this);
-		//this.setVisible(true);
 	}
 	
+	//Mets à jour la table de ligne de commande à partir de la commande active
 	private void afficherLignesCommande(Commande commandeActive){
 		try{
 		String[][] tableLigneCommande = commandeActive.creerTableLigneCommande();
-		//System.out.println(.length);
 		int i=0;
 		while (i<(tableLigneCommande.length)){
 			for (int j=0; j<4; j++){
@@ -132,6 +105,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 			}
 			i++;
 		}
+		//Mets le reste à blan
 		while (i<(ligneCommandeActives.length)){
 			for (int j=0; j<4; j++){
 				ligneCommandeActives[i][j] = "";
@@ -140,63 +114,25 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		}
 		tCommande.repaint();
 		}catch(Exception e){
-			
+			System.out.println("Erreur lors de l'affichage");
 		}
 	}
 	
-	public void actionPerformed(ActionEvent e){
-		Object source = e.getSource();
-		if (source==bRetour){
-			
-			this.setVisible(false);
-			monEntree.setVisible(true);
-			
-		}else if(source==cbListeTable){
-			ArrayList<Commande> listeCommande = new ArrayList<Commande>();
-			listeCommande = Restaurant.getListeCommandePourTable(cbListeTable.getSelectedItem().toString());
-			cbListeCommande.removeAllItems();
-			for(int i=0; i < listeCommande.size(); i++){
-				cbListeCommande.addItem(listeCommande.get(i));
-			}
-			
-		}else if(source==bAjouterCommande){
-			Restaurant.creerCommande(cbListeTable.getSelectedItem().toString());
-			ArrayList<Commande> listeCommande = new ArrayList<Commande>();
-			listeCommande = Restaurant.getListeCommandePourTable(cbListeTable.getSelectedItem().toString());
-			cbListeCommande.addItem(listeCommande.get(listeCommande.size()-1));
-			
-			
-		}else if(source==cbListeCommande){
-			Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
-			afficherLignesCommande(commandeActive);
-			//ligneCommandeActives
-			
-			
-			
-		}else if(source==bAjouterItem){
-			
-			try{
-			Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
-			String itemSelection = (String) cbListeMenu.getSelectedItem();
-			int quantite = 1;
-			try{
-				quantite = Integer.parseInt(tQuantite.getText());
-			}catch(NumberFormatException q){
-				quantite = 1;
-			}
-			commandeActive.creerLigneCommande(itemSelection, quantite, monEntree.monArchive);
-			
-			afficherLignesCommande(commandeActive);
-			}catch(NullPointerException n){
-				JOptionPane.showMessageDialog(frame,
-					    "Veuillez créer et sélectionner une commande",
-					    "Erreur",
-					    JOptionPane.ERROR_MESSAGE);
-			}
-		}else if(source==bPayerCommande){
-			try{
+	//Appelle la commande active pour changer tous les états "Non notifié" à "En attente"
+	private void changerEtatLignesCommande(Commande commandeActive){
+			commandeActive.setAllEtats("Non notifié", "En attente");	
+	}
+	
+	//Retire l'item avec l'id demandé de la commande active
+	private void retirerItem(Commande commandeActive, int id){
+		commandeActive.supprimerLigneCommande(id);	
+	}
+	
+	//Affiche le total et enregistre la commande dans la base de donné puis retire la commande
+	private void payerCommande(Commande commandeActive){
+		try{
 			Object[] options = {"OK","Annuler",};
-			Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+			
 			int n = JOptionPane.showOptionDialog(frame,
 					"Le total de la commande est de "+ Math.floor(commandeActive.getTotal() * 100) / 100,"Payer",
 					JOptionPane.YES_NO_CANCEL_OPTION,
@@ -207,44 +143,86 @@ public class InterfServeur extends Fenetre implements ActionListener{
 			if(n==0){
 				monArchive.createNewCommande(commandeActive);
 			}
-			}catch(NullPointerException n){
-				JOptionPane.showMessageDialog(frame,
-					    "Veuillez créer et sélectionner une commande",
-					    "Erreur",
-					    JOptionPane.ERROR_MESSAGE);
-			}catch(Exception e2){
-				System.out.println("Erreur lors de l'envoi");
-			}
-		}else if(source==bRetirerItem){
-			try{
+		}catch(Exception e2){
+			System.out.println("Erreur lors de l'envoi");
+		}
+	}
+	
+	//Ajoute un item du menu à la commande
+	private void ajouterItem(Commande commandeActive, String itemSelection, int quantite){
+		commandeActive.creerLigneCommande(itemSelection, quantite, monEntree.monArchive);
+	}
+	
+	public void actionPerformed(ActionEvent e){
+		Object source = e.getSource();
+		try{
+			if (source==bRetour){
+				
+				this.setVisible(false);
+				monEntree.setVisible(true);
+			
+			//Affiche les commandes actives pour la table sélectinonée
+			}else if(source==cbListeTable){
+				ArrayList<Commande> listeCommande = new ArrayList<Commande>();
+				listeCommande = Restaurant.getListeCommandePourTable(cbListeTable.getSelectedItem().toString());
+				cbListeCommande.removeAllItems();
+				for(int i=0; i < listeCommande.size(); i++){
+					cbListeCommande.addItem(listeCommande.get(i));
+				}
+				
+			//Ajoute une commande à la table sélectionnée
+			}else if(source==bAjouterCommande){
+				Restaurant.creerCommande(cbListeTable.getSelectedItem().toString());
+				ArrayList<Commande> listeCommande = new ArrayList<Commande>();
+				listeCommande = Restaurant.getListeCommandePourTable(cbListeTable.getSelectedItem().toString());
+				cbListeCommande.addItem(listeCommande.get(listeCommande.size()-1));
+			
+			//Affiche les lignes de commandes de la commande sélectionnée
+			}else if(source==cbListeCommande){
 				Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
-				commandeActive.supprimerLigneCommande(tCommande.getSelectedRow());
 				afficherLignesCommande(commandeActive);
-			}catch(IndexOutOfBoundsException o){
-				JOptionPane.showMessageDialog(frame,
-					    "Veuillez sélectionner un item",
-					    "Erreur",
-					    JOptionPane.ERROR_MESSAGE);
-			}catch(NullPointerException n){
-				JOptionPane.showMessageDialog(frame,
-					    "Veuillez créer et sélectionner une commande",
-					    "Erreur",
-					    JOptionPane.ERROR_MESSAGE);
+	
+			//Ajoute un item du menu à la commande sélectionnée
+			}else if(source==bAjouterItem){
+				int quantite = 1;
+				try{
+					quantite = Integer.parseInt(tQuantite.getText());
+				}catch(NumberFormatException q){
+					quantite = 1;
+				}
+				ajouterItem((Commande) cbListeCommande.getSelectedItem(), (String) cbListeMenu.getSelectedItem(),quantite);
+				
+			}else if(source==bPayerCommande){
+				payerCommande((Commande) cbListeCommande.getSelectedItem());
+				
+			}else if(source==bRetirerItem){
+				try{
+					Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+					retirerItem(commandeActive, tCommande.getSelectedRow());
+					afficherLignesCommande(commandeActive);
+				}catch(IndexOutOfBoundsException o){
+					JOptionPane.showMessageDialog(frame,
+					"Veuillez sélectionner un item",
+					"Erreur",
+					JOptionPane.ERROR_MESSAGE);
+				}
+				
+			}else if(source==bNotifier){
+				Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+				changerEtatLignesCommande(commandeActive);
+				afficherLignesCommande(commandeActive);
+			
+			//Réaffiche les modifications à la commande
+			}else if(source==bRafraichir){
+				afficherLignesCommande((Commande) cbListeCommande.getSelectedItem());
 			}
-		}else if(source==bNotifier){
-			try{
-			Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
-			commandeActive.setAllEtats("Non notifié", "En attente");
-			afficherLignesCommande(commandeActive);
-			}catch(NullPointerException n){
-				JOptionPane.showMessageDialog(frame,
-					    "Veuillez créer et sélectionner une commande",
-					    "Erreur",
-					    JOptionPane.ERROR_MESSAGE);
-			}
-		}else if(source==bRafraichir){
-			Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
-			afficherLignesCommande(commandeActive);
+		
+		//Utilisé pour vérifier si une commande a bien été sélectionné
+		}catch(NullPointerException n){
+			JOptionPane.showMessageDialog(frame,
+				    "Veuillez créer et sélectionner une commande",
+				    "Erreur",
+				    JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}

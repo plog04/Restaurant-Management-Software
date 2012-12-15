@@ -7,7 +7,6 @@ import java.util.Date;
 public class Commande {
 	
 	private Date date = new Date();
-	//private 
 	private ArrayList<LigneCommande> listeLigneCommande = new ArrayList<LigneCommande>();
 	private double total;
 	private String tableAssigne;
@@ -66,6 +65,7 @@ public class Commande {
 		return "Commande" + identifiant;
 	}
 	
+	//Utilisé pour afficher les lignes de commandes dans les interfaces
 	public String[][] creerTableLigneCommande(){
 		String[][] tableauLigneCommande;
 		tableauLigneCommande = new String[listeLigneCommande.size()][4];
@@ -79,7 +79,7 @@ public class Commande {
 		return tableauLigneCommande;
 	}
 	
-	
+	//Mets tous les états des lignes de commandes qui ont l'état préciser à un autre
 	public void setAllEtats(String etatAvant, String etatApres){
 		for(int i = 0; i<listeLigneCommande.size();i++){
 			LigneCommande ligneActive = listeLigneCommande.get(i);

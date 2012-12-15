@@ -24,13 +24,11 @@ public class LigneCommande {
 		sousTotal = prix * quantite;
 		description = (String) descPrix.get(0);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IndexOutOfBoundsException e) {
 			System.out.println("L'article n'a pas été trouvé");
 		}
 
-		//System.out.println(description+"\t"+quantite+"\t"+sousTotal);
 	}
 	public LigneCommande(String description, int quantity, Archive monArchive, Commande parent){
 		
@@ -42,13 +40,11 @@ public class LigneCommande {
 		sousTotal = prix * quantite;
 		this.description = description;
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IndexOutOfBoundsException e) {
 			System.out.println("L'article n'a pas été trouvé");
 		}
 
-		//System.out.println(description+"\t"+quantite+"\t"+sousTotal);
 	}
 	public String getEtat(){
 		return etat;
