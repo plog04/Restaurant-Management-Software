@@ -3,18 +3,28 @@ package Systeme;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class Commande {
-	
-	private Date date = new Date();
+	private Calendar calendar;
+	SimpleDateFormat date_format2 = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat date_format = new SimpleDateFormat("HH:mm");
+	//private Date date = new Date();
 	private ArrayList<LigneCommande> listeLigneCommande = new ArrayList<LigneCommande>();
 	private double total;
 	private String tableAssigne;
 	private int identifiant;
 	
+	private String heureDebut;
+	private String heureFin;
+	private String dateCreation;
+	
 	public Commande(String table, int id){
 		tableAssigne = table;
 		identifiant = id;
+		heureDebut=getHeure();
+		dateCreation = getDate();
 	}
 	
 	public void creerLigneCommande(int code, int quantite, Archive monArchive){
@@ -23,6 +33,7 @@ public class Commande {
 		listeLigneCommande.add(lignec);
 		total = total + lignec.getSousTotal();
 		}
+		
 	}
 	
 	public void creerLigneCommande(String description, int quantite, Archive monArchive){
@@ -36,7 +47,15 @@ public class Commande {
 	public ArrayList<LigneCommande> getListeLigneCommande(){
 		return listeLigneCommande;
 	}
-
+	public String getDateCreation(){
+		return (dateCreation);
+	}
+	public String getHeureDebut(){
+		return (heureDebut);
+	}
+	public String getHeureFin(){
+		return (heureFin);
+	}
 	
 	public double getTotal(){
 		return total;
@@ -58,8 +77,19 @@ public class Commande {
 	public int getId(){
 		return identifiant;
 	}
-	public Date getDate(){
-		return date;
+	
+	public void setHeureFin(){
+		heureFin=getHeure();
+	}
+	public String getDate(){
+		calendar = Calendar.getInstance();
+		String temps=date_format2.format(calendar.getTime());		
+		return (temps);
+	}
+	public String getHeure(){		
+		calendar = Calendar.getInstance();
+		String temps=date_format.format(calendar.getTime());		
+		return (temps);
 	}
 	public String toString(){
 		return "Commande" + identifiant;
