@@ -18,9 +18,9 @@ public class InterfServeur extends Fenetre implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	private JPanel pCommandes = new JPanel();
 	
-	private JComboBox<String> cbListeTable;
-	private JComboBox<Commande> cbListeCommande;
-	private JComboBox<String> cbListeMenu;
+	private JComboBox cbListeTable;
+	private JComboBox cbListeCommande;
+	private JComboBox cbListeMenu;
 	private JPanel pListeTables = new JPanel();
 	private JPanel pListeCommandes = new JPanel();
 	private JPanel pAjouterCommande = new JPanel();
@@ -64,9 +64,9 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		this.setTitle("Serveur");
 		cFenetre.add(pCommandes, BorderLayout.WEST);
 		
-		cbListeTable = new JComboBox<String>(Restaurant.getListeTable());
+		cbListeTable = new JComboBox(Restaurant.getListeTable());
 		cbListeTable.setSize(new Dimension(100,100));
-		cbListeCommande = new JComboBox<Commande>();
+		cbListeCommande = new JComboBox();
 		cbListeCommande.setSize(new Dimension(100,100));
 		
 		pCommandes.setLayout(new GridLayout(4, 1));
@@ -80,7 +80,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		pListeCommandes.add(cbListeCommande);
 		
 		try {
-			cbListeMenu = new JComboBox<String>(monArchive.getArticleMenuList());
+			cbListeMenu = new JComboBox(monArchive.getArticleMenuList());
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -118,6 +118,29 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		//this.setVisible(true);
 	}
 	
+	private void afficherLignesCommande(Commande commandeActive){
+		try{
+		String[][] tableLigneCommande = commandeActive.creerTableLigneCommande();
+		//System.out.println(.length);
+		int i=0;
+		while (i<(tableLigneCommande.length)){
+			for (int j=0; j<4; j++){
+				ligneCommandeActives[i][j] = tableLigneCommande[i][j];
+			}
+			i++;
+		}
+		while (i<(ligneCommandeActives.length)){
+			for (int j=0; j<4; j++){
+				ligneCommandeActives[i][j] = "";
+			}
+			i++;
+		}
+		tCommande.repaint();
+		}catch(Exception e){
+			
+		}
+	}
+	
 	public void actionPerformed(ActionEvent e){
 		Object source = e.getSource();
 		if (source==bRetour){
@@ -142,50 +165,82 @@ public class InterfServeur extends Fenetre implements ActionListener{
 			
 		}else if(source==cbListeCommande){
 			Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+			afficherLignesCommande(commandeActive);
 			//ligneCommandeActives
 			
-			String[][] tableLigneCommande = commandeActive.creerTableLigneCommande();
-			//System.out.println(.length);
 			
-			int i=0;
-			while (i<(tableLigneCommande.length/4)){
-				for (int j=0; j<4; j++){
-					ligneCommandeActives[i][j] = tableLigneCommande[i][j];
-				}
-				i++;
-			}
-			while (i<(ligneCommandeActives.length/4)){
-				for (int j=0; j<4; j++){
-					ligneCommandeActives[i][j] = "";
-				}
-				i++;
-			}
-			tCommande.repaint();
 			
 		}else if(source==bAjouterItem){
 			
-			
-			/*Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
-			System.out.println(commandeActive.toString());
-			
-			int code = 101;
+			try{
+			Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+			String itemSelection = (String) cbListeMenu.getSelectedItem();
 			int quantite = 1;
-			commandeActive.creerLigneCommande(code, quantite, monEntree.monArchive);
-			System.out.println(commandeActive.creerTableLigneCommande().length);*/
-		}else if(source==bPayerCommande){
-			Object[] options = {"OK",
-                    "Annuler",
-                    };
-int n = JOptionPane.showOptionDialog(frame,
-    "Le total de la commande est de "
-    + 10,
-    "Payer",
-    JOptionPane.YES_NO_CANCEL_OPTION,
-    JOptionPane.QUESTION_MESSAGE,
-    null,
-    options,
-    options[1]);
+			try{
+				quantite = Integer.parseInt(tQuantite.getText());
+			}catch(NumberFormatException q){
+				quantite = 1;
+			}
+			commandeActive.creerLigneCommande(itemSelection, quantite, monEntree.monArchive);
 			
+			afficherLignesCommande(commandeActive);
+			}catch(NullPointerException n){
+				JOptionPane.showMessageDialog(frame,
+					    "Veuillez créer et sélectionner une commande",
+					    "Erreur",
+					    JOptionPane.ERROR_MESSAGE);
+			}
+		}else if(source==bPayerCommande){
+			try{
+			Object[] options = {"OK","Annuler",};
+			Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+			int n = JOptionPane.showOptionDialog(frame,
+					"Le total de la commande est de "+ Math.floor(commandeActive.getTotal() * 100) / 100,"Payer",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE,
+					null,
+					options,
+					options[1]);
+			if(n==0){
+				System.out.println("Victoire");
+				monArchive.createNewCommande(commandeActive);
+			}
+			}catch(NullPointerException n){
+				JOptionPane.showMessageDialog(frame,
+					    "Veuillez créer et sélectionner une commande",
+					    "Erreur",
+					    JOptionPane.ERROR_MESSAGE);
+			}catch(Exception e2){
+				System.out.println("Erreur lors de l'envoi");
+			}
+		}else if(source==bRetirerItem){
+			try{
+				Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+				commandeActive.supprimerLigneCommande(tCommande.getSelectedRow());
+				afficherLignesCommande(commandeActive);
+			}catch(IndexOutOfBoundsException o){
+				JOptionPane.showMessageDialog(frame,
+					    "Veuillez sélectionner un item",
+					    "Erreur",
+					    JOptionPane.ERROR_MESSAGE);
+			}catch(NullPointerException n){
+				JOptionPane.showMessageDialog(frame,
+					    "Veuillez créer et sélectionner une commande",
+					    "Erreur",
+					    JOptionPane.ERROR_MESSAGE);
+			}
+		}else if(source==bNotifier){
+			try{
+			Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+			commandeActive.setAllEtats("Non notifié", "En attente");
+			afficherLignesCommande(commandeActive);
+			}catch(NullPointerException n){
+				JOptionPane.showMessageDialog(frame,
+					    "Veuillez créer et sélectionner une commande",
+					    "Erreur",
+					    JOptionPane.ERROR_MESSAGE);
+			}
 		}
+		
 	}
 }

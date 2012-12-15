@@ -7,16 +7,15 @@ import java.util.Scanner;
 
 
 public class Restaurant {
-	private static int terminer = 0;
+	
 	private static Restaurant copieRestaurant = null;
 	private static ArrayList<Commande> listeCommande = new ArrayList<Commande>();
 	private static String[] listeTable = new String[] {"Table1", "Table2", "Table3", "Table4"};
+	public static int lastId;
 	
 	public static void creerCommande(String table){
-		Date date = new Date();
-		String idCommande = "Commande" + (getListeCommandePourTable(table).size()+1);
-		listeCommande.add(new Commande(date, table, idCommande));
-		
+		lastId++;
+		listeCommande.add(new Commande(table, lastId));	
 	}
 
 	public static String[] getListeTable(){

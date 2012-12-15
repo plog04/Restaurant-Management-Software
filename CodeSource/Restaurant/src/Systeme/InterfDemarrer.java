@@ -36,6 +36,13 @@ public class InterfDemarrer extends Fenetre implements ActionListener{
 	
 	public InterfDemarrer(){
 		super();
+		
+		try {
+			Restaurant.lastId = monArchive.getLastId();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		fServeur.setVisible(false);
 		fCuisinier.setVisible(false);
 		fGestionnaire.setVisible(false);

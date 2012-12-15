@@ -8,13 +8,12 @@ public class Commande {
 	
 	private Date date = new Date();
 	//private 
-	ArrayList<LigneCommande> listeLigneCommande = new ArrayList<LigneCommande>();
+	private ArrayList<LigneCommande> listeLigneCommande = new ArrayList<LigneCommande>();
 	private double total;
 	private String tableAssigne;
-	private String identifiant;
+	private int identifiant;
 	
-	public Commande(Date date, String table, String id){
-		this.date = date;
+	public Commande(String table, int id){
 		tableAssigne = table;
 		identifiant = id;
 	}
@@ -25,6 +24,18 @@ public class Commande {
 		listeLigneCommande.add(lignec);
 		total = total + lignec.getSousTotal();
 		}
+	}
+	
+	public void creerLigneCommande(String description, int quantite, Archive monArchive){
+		LigneCommande lignec = new LigneCommande(description, quantite, monArchive);
+		if(lignec.getDescrip() != null){
+		listeLigneCommande.add(lignec);
+		total = total + lignec.getSousTotal();
+		}
+	}
+	
+	public ArrayList<LigneCommande> getListeLigneCommande(){
+		return listeLigneCommande;
 	}
 
 	
@@ -45,8 +56,14 @@ public class Commande {
 		tableAssigne = table;
 	}
 	
-	public String toString(){
+	public int getId(){
 		return identifiant;
+	}
+	public Date getDate(){
+		return date;
+	}
+	public String toString(){
+		return "Commande" + identifiant;
 	}
 	
 	public String[][] creerTableLigneCommande(){
@@ -54,12 +71,22 @@ public class Commande {
 		tableauLigneCommande = new String[listeLigneCommande.size()][4];
 		for(int i=0; i<listeLigneCommande.size(); i++){
 			LigneCommande ligneComm = listeLigneCommande.get(i);
-			tableauLigneCommande[0][i] = ligneComm.getEtat();
-			tableauLigneCommande[1][i] = ligneComm.getDescrip();
-			tableauLigneCommande[2][i] = ligneComm.getQuantite()+"";
-			tableauLigneCommande[3][i] = ligneComm.getSousTotal()+"";
+			tableauLigneCommande[i][3] = ligneComm.getEtat();
+			tableauLigneCommande[i][0] = ligneComm.getDescrip();
+			tableauLigneCommande[i][1] = ligneComm.getQuantite()+"";
+			tableauLigneCommande[i][2] = ligneComm.getSousTotal()+"";
 		}
 		return tableauLigneCommande;
+	}
+	
+	
+	public void setAllEtats(String etatAvant, String etatApres){
+		for(int i = 0; i<listeLigneCommande.size();i++){
+			LigneCommande ligneActive = listeLigneCommande.get(i);
+			if(ligneActive.getEtat()==etatAvant){
+				ligneActive.setEtat(etatApres);
+			}
+		}
 	}
 	
 }

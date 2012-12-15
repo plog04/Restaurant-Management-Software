@@ -124,7 +124,7 @@ public class Archive {
 		catch(Exception e)
 		{
 			article=new String[1];
-			System.err.println("erroor"+e);
+			System.err.println("error"+e);
 		}
 		finally
 	    {  	
@@ -394,81 +394,126 @@ public class Archive {
 		    
 		    return null;
 		  }
-}
-	/*
-	public static void getDescPrix(int code) throws ClassNotFoundException
-  {
+		public double getDescPrix(String nom) throws ClassNotFoundException
+		  {
+			// load the sqlite-JDBC driver using the current class loader
+		   /*
+			Class.forName("org.sqlite.JDBC");
+		    Connection connection = null;
+		    */
+		    try
+		    {
+		      // create a database connection
+		    	double prix = 0;
+		    	openConnection();
+		    	/*
+		      connection = DriverManager.getConnection("jdbc:sqlite:dbRestaurant.sqlite");
+		      Statement statement = connection.createStatement();
+		      statement.setQueryTimeout(30);  // set timeout to 30 sec.
+		      */
+		      ResultSet rs = statement.executeQuery("SELECT * FROM menu WHERE nom ='" +nom+"'");
+		      
+		      ArrayList<Object> DescPrix = new ArrayList<Object>();
+		      while(rs.next())
+		      {
+		        // read the result set
+		    	 
+		    	 
+		    	  prix = rs.getDouble("prix");
+		    	 
+		      }
+		      return prix;
+		    }
+		    catch(SQLException e)
+		    {
+		    	
+		    	
+		    	
+		      // if the error message is "out of memory", 
+		      // it probably means no database file is found
+		      System.err.println(e.getMessage());
+		    }
+		    
+		    finally
+		    {
+		    	
+		    	closeConnection();
+		     /*
+		    try
+		      {
+		        if(connection != null)
+		          connection.close();
+		      }
+		      catch(SQLException e)
+		      {
+		        // connection close failed.
+		        System.err.println(e);
+		      }
+		      */
+		    }
+		    
+		    return 0;
+		  }
+
+
+
+public int getLastId() throws ClassNotFoundException
+{
+	int lastId = 0;
 	// load the sqlite-JDBC driver using the current class loader
-    Class.forName("org.sqlite.JDBC");
-    Connection connection = null;
-    try
+  try
+  {
+    // create a database connection
+  	openConnection();
+    ResultSet rs = statement.executeQuery("SELECT numeroCommande FROM tableCommande ORDER BY numeroCommande DESC LIMIT 1");
+    while(rs.next())
     {
-      // create a database connection
-      connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Guillaume707\\Documents\\CodeSource\\Restaurant\\src\\Systeme\\dbRestaurant.sqlite");
-      Statement statement = connection.createStatement();
-      statement.setQueryTimeout(30);  // set timeout to 30 sec.
-      ResultSet rs = statement.executeQuery("SELECT * FROM menu WHERE code =" +code+"");
-      while(rs.next())
-      {
-        // read the result set
-    	  code =  rs.getInt("code");
-          nom = rs.getString("nom");
-          typeMenu = rs.getString("typeMenu");
-          description =  rs.getString("description");
-          prix = rs.getDouble("prix");
-      }
-      
+      // read the result set
+    	lastId = rs.getInt(1);
+  	 
     }
-    catch(SQLException e)
-    {
-      // if the error message is "out of memory", 
-      // it probably means no database file is found
-      System.err.println(e.getMessage());
-    }
-    finally
-    {
-      try
-      {
-        if(connection != null)
-          connection.close();
-      }
-      catch(SQLException e)
-      {
-        // connection close failed.
-        System.err.println(e);
-      }
-    }
+    return lastId;
   }
-	*/
-	
-	/*
-	public static void selectArticle(int code){
-		try {
-			Menu.getDescPrix(code); //appeler cette methode pour avoir prix, nom, description, etc correspondant
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		nom = Menu.getNom();
-		typeMenu = Menu.getTypeMenu();
-		description = Menu.getDescription();
-		prix = Menu.getPrix();
-	}
-	
-	public static double getPrix1(){
-		return prix;
-	}
-	
-	public static String getDescription1(){
-		return description;
-	}
-	
-	public static String getNom1(){
-		return nom;
-	}
-	
-	public static String getTypeMenu1(){
-		return typeMenu;
-	}
-	
+  catch(SQLException e)
+  {
+    // if the error message is "out of memory", 
+    // it probably means no database file is found
+    System.err.println(e.getMessage());
+  }
+  
+  finally
+  {
+  	
+  	closeConnection();
+  }
+  
+  return 0;
 }
-*/
+
+public boolean createNewCommande(Commande commande) throws ClassNotFoundException
+{
+	try{
+	  	openConnection();
+	  	Date date = new Date();
+	  	 statement.executeUpdate("INSERT INTO tableCommande VALUES ("
+	  			+commande.getId()+","+commande.getId()+",0,"+commande.getTotal()+",'"+commande.getDate()+"','"+date+"','"+date+ "')");
+	    
+    	return true;
+  	}catch(SQLException e){
+  	
+  	
+  	
+    // if the error message is "out of memory", 
+    // it probably means no database file is found
+    System.err.println(e.getMessage());
+  	}
+  
+  	finally
+  	{ 	
+  		closeConnection();
+  	}
+  
+  		return false;
+	}
+}
+	
