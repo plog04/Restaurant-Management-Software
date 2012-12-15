@@ -19,7 +19,7 @@ public class Commande {
 	}
 	
 	public void creerLigneCommande(int code, int quantite, Archive monArchive){
-		LigneCommande lignec = new LigneCommande(code, quantite, monArchive);
+		LigneCommande lignec = new LigneCommande(code, quantite, monArchive, this);
 		if(lignec.getDescrip() != null){
 		listeLigneCommande.add(lignec);
 		total = total + lignec.getSousTotal();
@@ -27,7 +27,7 @@ public class Commande {
 	}
 	
 	public void creerLigneCommande(String description, int quantite, Archive monArchive){
-		LigneCommande lignec = new LigneCommande(description, quantite, monArchive);
+		LigneCommande lignec = new LigneCommande(description, quantite, monArchive, this);
 		if(lignec.getDescrip() != null){
 		listeLigneCommande.add(lignec);
 		total = total + lignec.getSousTotal();

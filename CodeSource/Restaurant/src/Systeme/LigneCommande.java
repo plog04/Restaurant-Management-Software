@@ -10,11 +10,13 @@ public class LigneCommande {
 	private  double sousTotal;
 	private  int quantite;
 	private String etat;
+	private Commande parent;
 	
-	public LigneCommande(int code, int quantity, Archive monArchive){
+	public LigneCommande(int code, int quantity, Archive monArchive, Commande parent){
 		
 		ArrayList<Object> descPrix = new  ArrayList<Object>();
 		try {
+			this.parent = parent;
 			etat = "En attente";
 			descPrix = monArchive.getDescPrix(code);
 			quantite = quantity;
@@ -30,9 +32,10 @@ public class LigneCommande {
 
 		//System.out.println(description+"\t"+quantite+"\t"+sousTotal);
 	}
-	public LigneCommande(String description, int quantity, Archive monArchive){
+	public LigneCommande(String description, int quantity, Archive monArchive, Commande parent){
 		
 		try {
+			this.parent = parent;
 			etat = "Non notifié";
 			prix = monArchive.getDescPrix(description);
 			quantite = quantity;	
@@ -71,8 +74,11 @@ public class LigneCommande {
 		return description;
 	}
 	
+	public Commande getParent(){
+		return parent;
+	}
 	public String toString(){
-		return etat+" "+description + " " + prix +" " + sousTotal+" "+quantite;
+		return description;
 	}
 	
 }

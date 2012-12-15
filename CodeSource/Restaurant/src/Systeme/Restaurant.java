@@ -2,6 +2,7 @@ package Systeme;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -32,6 +33,30 @@ public class Restaurant {
 		}
 		
 		return listeCommandeTable;
+	}
+	
+	public static Object[][] creerTableToutesLigneCommandeEnAttente(){
+		Object[][] tableauLigneCommande;
+		ArrayList<LigneCommande> listeToutesLigneCommande = new ArrayList<LigneCommande>();
+		for(int i = 0; i<listeCommande.size(); i++){
+			Commande commandeActive = listeCommande.get(i);
+			for(int j = 0; j<commandeActive.getListeLigneCommande().size(); j++){
+				LigneCommande ligneActive = commandeActive.getListeLigneCommande().get(j);
+				if(ligneActive.getEtat() == "En attente"){
+					listeToutesLigneCommande.add(ligneActive);
+				}
+			}
+		}
+		tableauLigneCommande = new Object[listeToutesLigneCommande.size()][6];
+		for(int i=0; i<listeToutesLigneCommande.size(); i++){
+			LigneCommande ligneComm = listeToutesLigneCommande.get(i);
+			tableauLigneCommande[i][3] = ligneComm.getEtat();
+			tableauLigneCommande[i][0] = ligneComm;
+			tableauLigneCommande[i][1] = ligneComm.getQuantite()+"";
+			tableauLigneCommande[i][2] = ligneComm.getSousTotal()+"";
+			tableauLigneCommande[i][4] = ligneComm.getParent();
+		}
+		return tableauLigneCommande;
 	}
 
 		

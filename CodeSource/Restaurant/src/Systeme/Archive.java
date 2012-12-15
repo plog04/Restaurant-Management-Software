@@ -411,7 +411,7 @@ public class Archive {
 		      Statement statement = connection.createStatement();
 		      statement.setQueryTimeout(30);  // set timeout to 30 sec.
 		      */
-		      ResultSet rs = statement.executeQuery("SELECT * FROM menu WHERE nom ='" +nom+"'");
+		      ResultSet rs = statement.executeQuery("SELECT * FROM menu WHERE nom =\"" +nom+"\"");
 		      
 		      ArrayList<Object> DescPrix = new ArrayList<Object>();
 		      while(rs.next())

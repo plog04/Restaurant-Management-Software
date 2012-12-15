@@ -29,7 +29,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 	private InterfDemarrer monEntree;
 	
 
-	private String[][] ligneCommandeActives = new String[30][4];
+	private String[][] ligneCommandeActives = new String[52][4];
 	private String[] colonnesTableau = {"Description","Quantité","Sous-Total","État"};
 	
 	private JTable tCommande= new JTable(ligneCommandeActives, colonnesTableau);
@@ -41,6 +41,7 @@ public class InterfServeur extends Fenetre implements ActionListener{
 	private JButton bAjouterItem = new JButton("Ajouter item");
 	private JButton bRetirerItem = new JButton("Retirer item");
 	private JButton bNotifier = new JButton("Notifier");
+	private JButton bRafraichir = new JButton("Rafraîchir");
 	private JButton bPayerCommande = new JButton("Payer la commande");
 	private Archive monArchive;
 	JFrame frame = new JFrame();
@@ -105,10 +106,12 @@ public class InterfServeur extends Fenetre implements ActionListener{
 		pBoutons.add(bAjouterItem);
 		pBoutons.add(bRetirerItem);
 		pBoutons.add(bNotifier);
+		pBoutons.add(bRafraichir);
 		pBoutons.add(bPayerCommande);
 		bRetour.addActionListener(this);
 		cbListeTable.addActionListener(this);
 		bAjouterCommande.addActionListener(this);
+		bRafraichir.addActionListener(this);
 		cbListeCommande.addActionListener(this);
 		bAjouterItem.addActionListener(this);
 		
@@ -202,7 +205,6 @@ public class InterfServeur extends Fenetre implements ActionListener{
 					options,
 					options[1]);
 			if(n==0){
-				System.out.println("Victoire");
 				monArchive.createNewCommande(commandeActive);
 			}
 			}catch(NullPointerException n){
@@ -240,6 +242,9 @@ public class InterfServeur extends Fenetre implements ActionListener{
 					    "Erreur",
 					    JOptionPane.ERROR_MESSAGE);
 			}
+		}else if(source==bRafraichir){
+			Commande commandeActive = (Commande) cbListeCommande.getSelectedItem();
+			afficherLignesCommande(commandeActive);
 		}
 		
 	}
