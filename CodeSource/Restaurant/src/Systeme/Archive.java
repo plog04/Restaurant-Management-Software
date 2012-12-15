@@ -397,11 +397,11 @@ public int getLastId() throws ClassNotFoundException
   {
     // create a database connection
   	openConnection();
-    ResultSet rs = statement.executeQuery("SELECT numeroCommande FROM tableCommande ORDER BY numeroCommande DESC LIMIT 1");
+    ResultSet rs = statement.executeQuery("SELECT id FROM tableCommande ORDER BY id DESC LIMIT 1");
     while(rs.next())
     {
       // read the result set
-    	lastId = rs.getInt(1);
+    	lastId = rs.getInt("id");
   	 
     }
     return lastId;
@@ -427,8 +427,11 @@ public boolean createNewCommande(Commande commande) throws ClassNotFoundExceptio
 	try{
 	  	openConnection();
 	  	Date date = new Date();
-	  	 statement.executeUpdate("INSERT INTO tableCommande (numeroCommande,nomServeur,prixTotal,heureDebut,heureFin,dateCreation)VALUES ("
-	  			+commande.getId()+",0,"+commande.getTotal()+",'"+commande.getDate()+"','"+date+"','"+date+ "')");
+	  	String heureDebut = commande.getDate().getHours() + "h" + commande.getDate().getMinutes();
+	  	String heureFin = date.getHours() + "h" + date.getMinutes();
+	  	String dateCreation = date.getDay() + "-" + date.getMonth() + "-" + date.getYear();
+	  	 statement.executeUpdate("INSERT INTO tableCommande (id,numeroCommande,nomServeur,prixTotal,heureDebut,heureFin,dateCreation)VALUES ("
+	  			+commande.getId()+","+commande.getId()+",0,"+commande.getTotal()+",'"+heureDebut+"','"+heureFin+"','"+dateCreation+ "')");
 	  	ArrayList<LigneCommande> listeLigneCommande = commande.getListeLigneCommande();
 	  	 for(int i = 0; i<listeLigneCommande.size();i++){
 	  		statement.executeUpdate("INSERT INTO ligneCommande (numeroCommande,codeMenu,quantite) VALUES ("+commande.getId()+","+listeLigneCommande.get(i).getCode()+","+listeLigneCommande.get(i).getQuantite()+")");

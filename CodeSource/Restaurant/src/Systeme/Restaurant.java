@@ -16,7 +16,7 @@ public class Restaurant {
 	public static int lastId;
 	
 	public static void creerCommande(String table){
-		lastId++;
+		lastId = lastId + 1;
 		listeCommande.add(new Commande(table, lastId));	
 	}
 
