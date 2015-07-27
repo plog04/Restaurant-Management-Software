@@ -5,6 +5,6 @@ To handle multiple use cases, this software include the following interfaces :
 
 1. Cook interface
 
-2. Server interface
+2. Waiter interface
 
 3. Manager interface (employees, restaurant statistics)
